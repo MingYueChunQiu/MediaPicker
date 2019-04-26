@@ -4,6 +4,8 @@
     android:id="@+id/tb_mp_media_picker_bar"
     android:layout_width="match_parent"
     android:layout_height="?android:actionBarSize"
+    android:background="@android:color/white"
+    android:elevation="@dimen/dp_10"
     app:navigationIcon="@drawable/mp_back">
 
     <android.support.v7.widget.AppCompatTextView
