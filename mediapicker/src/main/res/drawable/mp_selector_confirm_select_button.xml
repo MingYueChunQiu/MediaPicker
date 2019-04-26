@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="false">
+        <shape>
+            <corners android:radius="@dimen/dp_4" />
+            <solid android:color="@color/green_90A890" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/mp_selector_confirm_select_button_enabled" android:state_enabled="true" />
+</selector>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MediaPicker</string>
+
+    <string name="mp_confirm">确认</string>
+
+    <string name="mp_image">图片</string>
+    <string name="mp_audio">音频</string>
+    <string name="mp_video">视频</string>
+    <string name="mp_select_image">选择图片</string>
+    <string name="mp_select_audio">选择音频</string>
+    <string name="mp_select_video">选择视频</string>
+</resources>
