@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -17,8 +15,8 @@ import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
 import com.mingyuechunqiu.mediapicker.feature.main.detail.MediaPickerFragment;
 import com.mingyuechunqiu.mediapicker.feature.main.detail.MediaPickerFragmentable;
-import com.mingyuechunqiu.mediapicker.framework.KeyBackCallback;
 import com.mingyuechunqiu.mediapicker.framework.MediaPickerCallback;
+import com.mingyuechunqiu.mediapicker.ui.activity.BaseMediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePresenterFragment;
 
 import java.util.ArrayList;
@@ -41,14 +39,13 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.MP_HIDE_LO
  *     version: 1.0
  * </pre>
  */
-public class MediaPickerActivity extends AppCompatActivity implements KeyBackCallback, EasyPermissions.PermissionCallbacks, MediaPickerCallback, BasePresenterFragment.FragmentCallback {
+public class MediaPickerActivity extends BaseMediaPickerActivity implements EasyPermissions.PermissionCallbacks, MediaPickerCallback, BasePresenterFragment.FragmentCallback {
 
     private static final String[] permissions = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private MediaPickerFragmentable mMediaPickerFgable;
-    private List<OnKeyBackListener> mListeners;
     private MediaPickerLoadingFragment mLoadingFg;
 
     @Override
@@ -79,36 +76,8 @@ public class MediaPickerActivity extends AppCompatActivity implements KeyBackCal
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mListeners != null) {
-            mListeners.clear();
-            mListeners = null;
-        }
         mMediaPickerFgable = null;
         removeLoadingFragment();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && mListeners != null && mListeners.size() > 0) {
-            for (OnKeyBackListener listener : mListeners) {
-                if (listener != null) {
-                    listener.onClickKeyBack(event);
-                    return true;
-                }
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void addOnKeyBackListener(OnKeyBackListener listener) {
-        if (listener == null) {
-            return;
-        }
-        if (mListeners == null) {
-            mListeners = new ArrayList<>();
-        }
-        mListeners.add(listener);
     }
 
     @Override

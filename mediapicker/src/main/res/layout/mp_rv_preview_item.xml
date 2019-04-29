@@ -5,13 +5,26 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/iv_mp_preview_image_item_show"
+        android:id="@+id/iv_mp_preview_item_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/iv_mp_preview_item_play"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/mp_play"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.18" />
+
     <android.support.v7.widget.AppCompatCheckBox
-        android:id="@+id/cb_mp_preview_image_item_checked"
+        android:id="@+id/cb_mp_preview_item_checked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

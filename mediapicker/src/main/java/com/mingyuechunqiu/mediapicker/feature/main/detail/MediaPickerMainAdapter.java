@@ -20,7 +20,7 @@ import java.util.List;
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/23
  *     desc   : 多媒体选择器列表适配器
- *              继承自BaseQuickAdapter
+ *              继承自BaseMediaPickerAdapter
  *     version: 1.0
  * </pre>
  */
@@ -42,7 +42,7 @@ class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, Ba
                 .addOnClickListener(R.id.iv_mp_media_item_show);
         AppCompatImageView ivShow = helper.getView(R.id.iv_mp_media_item_show);
         if (ivShow != null) {
-            MediaPicker.INSTANCE.getImageEngine().showImage(mContext,
+            MediaPicker.getImageEngine().showImage(mContext,
                     new File(item.getInfo().getFilePath()),
                     R.drawable.mp_back, R.drawable.mp_back, ivShow);
         }

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,14 @@ import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.feature.preview.image.PreviewImageFragment;
+import com.mingyuechunqiu.mediapicker.feature.preview.video.PreviewVideoFragment;
+import com.mingyuechunqiu.mediapicker.framework.KeyBackCallback;
 import com.mingyuechunqiu.mediapicker.framework.MediaPickerCallback;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePresenterFragment;
+import com.mingyuechunqiu.mediapicker.ui.fragment.BasePreviewFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -47,6 +52,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     private MediaPickerConfig mConfig;
     private boolean beInPreview;//标记是否处于预览状态
     private PreviewImageFragment mPreviewImageFg;
+    private PreviewVideoFragment mPreviewVideoFg;
 
     @Nullable
     @Override
@@ -74,16 +80,19 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                 .getSelectedCount().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer integer) {
-                if (integer == null || mConfig == null) {
-                    return;
-                }
-                mPresenter.handelConfirmView(integer != 0, integer,
-                        mConfig.getMaxSelectMediaCount(), new WeakReference<>(tvConfirm));
-                if (rvList != null && rvList.getAdapter() != null) {
-                    rvList.getAdapter().notifyDataSetChanged();
-                }
+                updateItemSelectedStatus(integer, tvConfirm);
             }
         });
+        if (getActivity() instanceof KeyBackCallback) {
+            ((KeyBackCallback) getActivity()).addOnKeyBackListener(new KeyBackCallback.OnKeyBackListener() {
+                @Override
+                public boolean onClickKeyBack(KeyEvent event) {
+                    //如果有预览界面，先清除预览界面
+                    handleBack();
+                    return true;
+                }
+            });
+        }
         return view;
     }
 
@@ -100,7 +109,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     @Override
     protected void releaseOnDestroyView() {
         mConfig = null;
-        removePreviewFragment(mPreviewImageFg);
+        removeAllPreviewFragments();
     }
 
     @Override
@@ -108,19 +117,10 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
 
     }
 
-    public static MediaPickerFragment newInstance(MediaPickerConfig config) {
-        MediaPickerFragment fragment = new MediaPickerFragment();
-        fragment.mConfig = config;
-        if (fragment.mConfig == null) {
-            fragment.mConfig = new MediaPickerConfig();
-        }
-        return fragment;
-    }
-
     @Override
     public void handleBack() {
         if (beInPreview) {
-            removePreviewFragment(mPreviewImageFg);
+            removeAllPreviewFragments();
         } else {
             if (getActivity() instanceof MediaPickerActivity) {
                 ((MediaPickerActivity) getActivity()).finishActivity();
@@ -138,16 +138,75 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     }
 
     @Override
-    public void showPreview(List<MediaAdapterItem> list, int index) {
+    public void showPreview(List<MediaAdapterItem> list, int index, MediaPickerType type) {
         if (list == null) {
             return;
         }
-        mPreviewImageFg = PreviewImageFragment.newInstance(list, index);
+        BasePreviewFragment fragment = null;
+        switch (type) {
+            case TYPE_IMAGE:
+                fragment = mPreviewImageFg = PreviewImageFragment.newInstance(list, index);
+                break;
+            case TYPE_AUDIO:
+                break;
+            case TYPE_VIDEO:
+                fragment = mPreviewVideoFg = PreviewVideoFragment.newInstance(list, index);
+                break;
+            default:
+                break;
+        }
+        showPreviewFragment(fragment);
+    }
+
+    public static MediaPickerFragment newInstance(MediaPickerConfig config) {
+        MediaPickerFragment fragment = new MediaPickerFragment();
+        fragment.mConfig = config;
+        if (fragment.mConfig == null) {
+            fragment.mConfig = new MediaPickerConfig();
+        }
+        return fragment;
+    }
+
+    /**
+     * 更新Item被选中状态
+     *
+     * @param integer   已选中的Item数量
+     * @param tvConfirm 确认控件
+     */
+    private void updateItemSelectedStatus(@Nullable Integer integer, AppCompatTextView tvConfirm) {
+        if (integer == null || mConfig == null) {
+            return;
+        }
+        mPresenter.handelConfirmView(integer != 0, integer,
+                mConfig.getMaxSelectMediaCount(), new WeakReference<>(tvConfirm));
+        if (rvList != null && rvList.getAdapter() != null) {
+            rvList.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 显示预览界面
+     *
+     * @param fragment 预览界面
+     */
+    private void showPreviewFragment(BasePreviewFragment fragment) {
+        if (fragment == null) {
+            return;
+        }
         getChildFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.mp_scale_in_magnify, R.anim.mp_scale_out_shrink)
-                .add(R.id.fl_mp_media_picker_preview_container, mPreviewImageFg)
+                .add(R.id.fl_mp_media_picker_preview_container, fragment)
                 .commitAllowingStateLoss();
         beInPreview = true;
+    }
+
+    /**
+     * 移除所有预览界面
+     */
+    private void removeAllPreviewFragments() {
+        removePreviewFragment(mPreviewImageFg, mPreviewVideoFg);
+        mPreviewImageFg = null;
+        mPreviewVideoFg = null;
     }
 
     /**

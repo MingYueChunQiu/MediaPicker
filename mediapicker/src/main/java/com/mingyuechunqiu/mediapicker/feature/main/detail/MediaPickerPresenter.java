@@ -164,7 +164,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                     return;
                 }
                 //noinspection unchecked
-                mViewRef.get().showPreview(adapter.getData(), position);
+                mViewRef.get().showPreview(adapter.getData(), position, mConfig.getMediaPickerType());
             }
         });
         mHandler.post(new Runnable() {

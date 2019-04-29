@@ -40,7 +40,7 @@ public class MediaPicker {
         return INSTANCE.mControl;
     }
 
-    public ImageEngine getImageEngine() {
+    public static ImageEngine getImageEngine() {
         return INSTANCE.mControl.getImageEngine();
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import com.mingyuechunqiu.mediapicker.base.presenter.BaseAbstractPresenter;
 import com.mingyuechunqiu.mediapicker.base.view.IBaseView;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
+import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/25
- *     desc   :
+ *     desc   : 主界面相关契约类，约定相互能实现调用的api
  *     version: 1.0
  * </pre>
  */
@@ -31,7 +32,7 @@ interface MediaPickerContract {
 
         void hideLoading();
 
-        void showPreview(List<MediaAdapterItem> list, int index);
+        void showPreview(List<MediaAdapterItem> list, int index, MediaPickerType type);
     }
 
     abstract class Presenter<V extends View> extends BaseAbstractPresenter<V> {
