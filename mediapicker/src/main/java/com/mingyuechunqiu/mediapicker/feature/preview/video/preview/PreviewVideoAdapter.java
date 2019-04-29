@@ -1,4 +1,4 @@
-package com.mingyuechunqiu.mediapicker.feature.preview.video;
+package com.mingyuechunqiu.mediapicker.feature.preview.video.preview;
 
 import android.support.annotation.Nullable;
 

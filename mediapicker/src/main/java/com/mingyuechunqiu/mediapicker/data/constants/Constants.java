@@ -16,6 +16,8 @@ public class Constants {
 
     public static final String PREFIX_EXTRA = "EXTRA_";//Intent数据前缀
 
+    public static final String PREFIX_BUNDLE = "BUNDLE_";//Bundle数据前缀
+
     //多媒体选择器配置信息
     public static final String EXTRA_MEDIA_PICKER_CONFIG = PREFIX_EXTRA + "media_picker_config";
 

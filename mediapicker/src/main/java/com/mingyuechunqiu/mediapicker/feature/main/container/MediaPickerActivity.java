@@ -18,6 +18,7 @@ import com.mingyuechunqiu.mediapicker.feature.main.detail.MediaPickerFragmentabl
 import com.mingyuechunqiu.mediapicker.framework.MediaPickerCallback;
 import com.mingyuechunqiu.mediapicker.ui.activity.BaseMediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePresenterFragment;
+import com.mingyuechunqiu.mediapicker.util.FragmentUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,10 @@ public class MediaPickerActivity extends BaseMediaPickerActivity implements Easy
     protected void onDestroy() {
         super.onDestroy();
         mMediaPickerFgable = null;
-        removeLoadingFragment();
+        FragmentUtils.removeFragments(getSupportFragmentManager(),
+                android.R.anim.slide_in_left, android.R.anim.slide_out_right,
+                mLoadingFg);
+        mLoadingFg = null;
     }
 
     @Override
@@ -105,8 +109,6 @@ public class MediaPickerActivity extends BaseMediaPickerActivity implements Easy
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
     }
@@ -137,7 +139,8 @@ public class MediaPickerActivity extends BaseMediaPickerActivity implements Easy
             return;
         }
         if (bundle.getBoolean(MP_HIDE_LOADING)) {
-            removeLoadingFragment();
+            removeFragments(mLoadingFg);
+            mLoadingFg = null;
         }
     }
 
@@ -146,11 +149,9 @@ public class MediaPickerActivity extends BaseMediaPickerActivity implements Easy
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
     }
 
-    private void removeLoadingFragment() {
-        if (mLoadingFg != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mLoadingFg)
-                    .commitAllowingStateLoss();
-        }
+    private void removeFragments(Fragment... fragments) {
+        FragmentUtils.removeFragments(getSupportFragmentManager(),
+                android.R.anim.fade_in, android.R.anim.fade_out,
+                fragments);
     }
 }

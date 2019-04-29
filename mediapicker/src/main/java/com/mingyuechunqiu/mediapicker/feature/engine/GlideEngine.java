@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.feature.engine;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,17 @@ public class GlideEngine implements ImageEngine {
             return;
         }
         Glide.with(context)
+                .load(file)
+                .apply(new RequestOptions().placeholder(placeholderId).error(errorId))
+                .into(imageView);
+    }
+
+    @Override
+    public void showImage(Fragment fragment, File file, int placeholderId, int errorId, ImageView imageView) {
+        if (fragment == null || file == null || !file.exists()) {
+            return;
+        }
+        Glide.with(fragment)
                 .load(file)
                 .apply(new RequestOptions().placeholder(placeholderId).error(errorId))
                 .into(imageView);

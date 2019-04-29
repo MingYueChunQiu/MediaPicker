@@ -1,13 +1,17 @@
-package com.mingyuechunqiu.mediapicker.feature.preview.video;
+package com.mingyuechunqiu.mediapicker.feature.preview.video.preview;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePreviewFragment;
 
 import java.util.List;
+
+import static com.mingyuechunqiu.mediapicker.feature.preview.video.play.PlayVideoFragment.BUNDLE_VIDEO_FILE_PATH;
 
 /**
  * <pre>
@@ -60,5 +64,17 @@ public class PreviewVideoFragment extends BasePreviewFragment<PreviewVideoContra
         fragment.mList = list;
         fragment.mIndex = index;
         return fragment;
+    }
+
+    @Override
+    public void startPlayVideo(String filePath) {
+        if (TextUtils.isEmpty(filePath) || getParentFragment() == null) {
+            return;
+        }
+        if (getParentFragment() instanceof FragmentCallback) {
+            Bundle bundle = new Bundle();
+            bundle.putString(BUNDLE_VIDEO_FILE_PATH, filePath);
+            ((FragmentCallback) getParentFragment()).onCall(this, bundle);
+        }
     }
 }

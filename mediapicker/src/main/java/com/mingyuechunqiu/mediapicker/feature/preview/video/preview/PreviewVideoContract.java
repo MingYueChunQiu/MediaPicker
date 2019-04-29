@@ -1,4 +1,4 @@
-package com.mingyuechunqiu.mediapicker.feature.preview.video;
+package com.mingyuechunqiu.mediapicker.feature.preview.video.preview;
 
 import com.mingyuechunqiu.mediapicker.base.presenter.BasePreviewPresenter;
 import com.mingyuechunqiu.mediapicker.base.view.IPreviewView;
@@ -16,6 +16,8 @@ import com.mingyuechunqiu.mediapicker.base.view.IPreviewView;
 interface PreviewVideoContract {
 
     interface View<P extends Presenter> extends IPreviewView<P> {
+
+        void startPlayVideo(String filePath);
     }
 
     abstract class Presenter<V extends View> extends BasePreviewPresenter<V> {

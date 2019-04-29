@@ -6,14 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
@@ -22,17 +23,20 @@ import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.feature.preview.image.PreviewImageFragment;
-import com.mingyuechunqiu.mediapicker.feature.preview.video.PreviewVideoFragment;
+import com.mingyuechunqiu.mediapicker.feature.preview.video.play.PlayVideoFragment;
+import com.mingyuechunqiu.mediapicker.feature.preview.video.preview.PreviewVideoFragment;
 import com.mingyuechunqiu.mediapicker.framework.KeyBackCallback;
 import com.mingyuechunqiu.mediapicker.framework.MediaPickerCallback;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePresenterFragment;
 import com.mingyuechunqiu.mediapicker.ui.fragment.BasePreviewFragment;
+import com.mingyuechunqiu.mediapicker.util.FragmentUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mingyuechunqiu.mediapicker.data.constants.Constants.MP_HIDE_LOADING;
+import static com.mingyuechunqiu.mediapicker.feature.preview.video.play.PlayVideoFragment.BUNDLE_VIDEO_FILE_PATH;
 
 /**
  * <pre>
@@ -45,7 +49,8 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.MP_HIDE_LO
  *     version: 1.0
  * </pre>
  */
-public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContract.View<MediaPickerContract.Presenter>, MediaPickerContract.Presenter> implements MediaPickerFragmentable, MediaPickerContract.View<MediaPickerContract.Presenter> {
+public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContract.View<MediaPickerContract.Presenter>, MediaPickerContract.Presenter>
+        implements MediaPickerFragmentable, MediaPickerContract.View<MediaPickerContract.Presenter>, BasePresenterFragment.FragmentCallback {
 
     private RecyclerView rvList;
 
@@ -53,16 +58,17 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     private boolean beInPreview;//标记是否处于预览状态
     private PreviewImageFragment mPreviewImageFg;
     private PreviewVideoFragment mPreviewVideoFg;
+    private PlayVideoFragment mPlayVideoFg;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mp_fragment_media_picker, container, false);
         Toolbar toolbar = view.findViewById(R.id.tb_mp_media_picker_bar);
-        mPresenter.initToolbar(getActivity(), toolbar);
         final AppCompatTextView tvConfirm = view.findViewById(R.id.tv_mp_media_picker_confirm);
         rvList = view.findViewById(R.id.rv_mp_media_picker_list);
 
+        mPresenter.initToolbar(getActivity(), toolbar);
         tvConfirm.setEnabled(false);
         tvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +93,10 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
             ((KeyBackCallback) getActivity()).addOnKeyBackListener(new KeyBackCallback.OnKeyBackListener() {
                 @Override
                 public boolean onClickKeyBack(KeyEvent event) {
+                    if (mPlayVideoFg != null) {
+                        removePlayVideoFragment();
+                        return true;
+                    }
                     //如果有预览界面，先清除预览界面
                     handleBack();
                     return true;
@@ -110,6 +120,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     protected void releaseOnDestroyView() {
         mConfig = null;
         removeAllPreviewFragments();
+        removePlayVideoFragment();
     }
 
     @Override
@@ -119,6 +130,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
 
     @Override
     public void handleBack() {
+        removePlayVideoFragment();
         if (beInPreview) {
             removeAllPreviewFragments();
         } else {
@@ -156,6 +168,16 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                 break;
         }
         showPreviewFragment(fragment);
+    }
+
+    @Override
+    public void onCall(Fragment fragment, Bundle bundle) {
+        if (bundle != null && !TextUtils.isEmpty(bundle.getString(BUNDLE_VIDEO_FILE_PATH))) {
+            mPlayVideoFg = PlayVideoFragment.newInstance(bundle.getString(BUNDLE_VIDEO_FILE_PATH));
+            getChildFragmentManager().beginTransaction()
+                    .add(R.id.fl_mp_media_picker_container, mPlayVideoFg)
+                    .commitAllowingStateLoss();
+        }
     }
 
     public static MediaPickerFragment newInstance(MediaPickerConfig config) {
@@ -202,8 +224,13 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
 
     /**
      * 移除所有预览界面
+     *
+     * @return 如果成功执行移除操作返回true，否则返回false
      */
     private void removeAllPreviewFragments() {
+        if (!beInPreview) {
+            return;
+        }
         removePreviewFragment(mPreviewImageFg, mPreviewVideoFg);
         mPreviewImageFg = null;
         mPreviewVideoFg = null;
@@ -215,17 +242,18 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
      * @param fragments 要被移除的界面
      */
     private void removePreviewFragment(Fragment... fragments) {
-        if (fragments == null) {
-            return;
-        }
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.mp_scale_in_magnify, R.anim.mp_scale_out_shrink);
-        for (Fragment f : fragments) {
-            if (f != null) {
-                transaction.remove(f);
-            }
-        }
-        transaction.commitAllowingStateLoss();
+        FragmentUtils.removeFragments(getChildFragmentManager(),
+                R.anim.mp_scale_in_magnify, R.anim.mp_scale_out_shrink, fragments);
         beInPreview = false;
+    }
+
+    private void removePlayVideoFragment() {
+        FragmentUtils.removeFragments(getChildFragmentManager(),
+                android.R.anim.fade_in, android.R.anim.fade_out, mPlayVideoFg);
+        mPlayVideoFg = null;
+        //从播放视频界面回来时要移除全屏效果
+        if (getActivity() != null) {
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 }

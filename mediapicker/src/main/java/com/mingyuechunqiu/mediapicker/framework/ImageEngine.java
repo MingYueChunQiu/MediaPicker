@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.framework;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.v4.app.Fragment;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -28,5 +29,17 @@ public interface ImageEngine {
      * @param imageView     显示控件
      */
     void showImage(Context context, File file,
+                   @DrawableRes int placeholderId, @DrawableRes int errorId, ImageView imageView);
+
+    /**
+     * 显示图片
+     *
+     * @param fragment      界面
+     * @param file          显示图片
+     * @param placeholderId 占位图资源
+     * @param errorId       错误图资源
+     * @param imageView     显示控件
+     */
+    void showImage(Fragment fragment, File file,
                    @DrawableRes int placeholderId, @DrawableRes int errorId, ImageView imageView);
 }
