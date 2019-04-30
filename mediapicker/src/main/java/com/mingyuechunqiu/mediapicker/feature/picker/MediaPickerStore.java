@@ -84,6 +84,13 @@ class MediaPickerStore implements MediaPickerStoreable {
     }
 
     @Override
+    public MediaPickerStoreable setStartThirdPreview(boolean startThirdPreview) {
+        checkOrCreateMediaPickerConfig();
+        mConfigBuilder.setStartThirdPreview(startThirdPreview);
+        return this;
+    }
+
+    @Override
     public MediaPickerStoreable setImageEngine(ImageEngine engine) {
         checkOrCreateMediaPickerConfig();
         mConfigBuilder.setImageEngine(engine);

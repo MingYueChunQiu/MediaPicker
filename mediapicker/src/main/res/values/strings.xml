@@ -9,4 +9,5 @@
     <string name="mp_select_image">选择图片</string>
     <string name="mp_select_audio">选择音频</string>
     <string name="mp_select_video">选择视频</string>
+    <string name="formatted_zero_time">00:00</string>
 </resources>

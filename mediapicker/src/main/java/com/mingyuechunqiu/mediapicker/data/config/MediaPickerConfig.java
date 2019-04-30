@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.data.config;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.engine.GlideEngine;
@@ -33,6 +34,8 @@ public class MediaPickerConfig implements Parcelable {
 
     private int columnCount;//一行列数
 
+    private boolean startThirdPreview;//打开第三方预览应用
+
     private ImageEngine engine;
 
     public MediaPickerConfig() {
@@ -41,16 +44,18 @@ public class MediaPickerConfig implements Parcelable {
         limitSize = SET_INVALID;
         limitDuration = SET_INVALID;
         columnCount = 4;
+        startThirdPreview = true;
         engine = new GlideEngine();
     }
 
-    protected MediaPickerConfig(Parcel in) {
+    protected MediaPickerConfig(@NonNull Parcel in) {
         mediaPickerType = MediaPickerType.values()[in.readInt()];
         maxSelectMediaCount = in.readInt();
         limitSize = in.readLong();
         limitDuration = in.readLong();
         filterLimitMedia = in.readByte() != 0;
         columnCount = in.readInt();
+        startThirdPreview = in.readByte() != 0;
     }
 
     public static final Creator<MediaPickerConfig> CREATOR = new Creator<MediaPickerConfig>() {
@@ -113,6 +118,14 @@ public class MediaPickerConfig implements Parcelable {
         this.columnCount = columnCount;
     }
 
+    public boolean isStartThirdPreview() {
+        return startThirdPreview;
+    }
+
+    public void setStartThirdPreview(boolean startThirdPreview) {
+        this.startThirdPreview = startThirdPreview;
+    }
+
     public ImageEngine getImageEngine() {
         return engine;
     }
@@ -134,6 +147,7 @@ public class MediaPickerConfig implements Parcelable {
         dest.writeLong(limitDuration);
         dest.writeByte((byte) (filterLimitMedia ? 1 : 0));
         dest.writeInt(columnCount);
+        dest.writeByte((byte) (startThirdPreview ? 1 : 0));
     }
 
     /**
@@ -202,6 +216,15 @@ public class MediaPickerConfig implements Parcelable {
 
         public Builder setColumnCount(int columnCount) {
             mConfig.columnCount = columnCount;
+            return this;
+        }
+
+        public boolean isStartThirdPreview() {
+            return mConfig.startThirdPreview;
+        }
+
+        public Builder setStartThirdPreview(boolean startThirdPreview) {
+            mConfig.startThirdPreview = startThirdPreview;
             return this;
         }
 

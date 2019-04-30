@@ -2,6 +2,8 @@ package com.mingyuechunqiu.mediapicker.feature.main.detail;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +24,7 @@ import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
+import com.mingyuechunqiu.mediapicker.feature.preview.audio.PreviewAudioDialogFragment;
 import com.mingyuechunqiu.mediapicker.feature.preview.image.PreviewImageFragment;
 import com.mingyuechunqiu.mediapicker.feature.preview.video.play.PlayVideoFragment;
 import com.mingyuechunqiu.mediapicker.feature.preview.video.preview.PreviewVideoFragment;
@@ -59,6 +62,11 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     private PreviewImageFragment mPreviewImageFg;
     private PreviewVideoFragment mPreviewVideoFg;
     private PlayVideoFragment mPlayVideoFg;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Nullable
     @Override
@@ -160,8 +168,21 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                 fragment = mPreviewImageFg = PreviewImageFragment.newInstance(list, index);
                 break;
             case TYPE_AUDIO:
+//                if (mConfig.isStartThirdPreview()) {
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setDataAndType(Uri.parse(list.get(index).getInfo().getFilePath()), "audio/*");
+//                    startActivity(intent);
+//                    return;
+//                }
+                showPreviewAudio(list, index);
                 break;
             case TYPE_VIDEO:
+                if (mConfig.isStartThirdPreview()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(list.get(index).getInfo().getFilePath()), "video/*");
+                    startActivity(intent);
+                    return;
+                }
                 fragment = mPreviewVideoFg = PreviewVideoFragment.newInstance(list, index);
                 break;
             default:
@@ -207,6 +228,20 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     }
 
     /**
+     * 显示预览音频界面
+     *
+     * @param list  多媒体数据列表
+     * @param index 数据在列表中的索引位置
+     */
+    private void showPreviewAudio(List<MediaAdapterItem> list, int index) {
+        if (list == null || index < 0 || index > list.size() - 1 || getFragmentManager() == null) {
+            return;
+        }
+        PreviewAudioDialogFragment dialogFragment = PreviewAudioDialogFragment.newInstance(list.get(index).getInfo());
+        dialogFragment.show(getFragmentManager(), PreviewAudioDialogFragment.class.getSimpleName());
+    }
+
+    /**
      * 显示预览界面
      *
      * @param fragment 预览界面
@@ -224,8 +259,6 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
 
     /**
      * 移除所有预览界面
-     *
-     * @return 如果成功执行移除操作返回true，否则返回false
      */
     private void removeAllPreviewFragments() {
         if (!beInPreview) {

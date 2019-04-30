@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
-                        .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
+                        .setMediaPickerType(MediaPickerType.TYPE_AUDIO)
                         .setMaxSelectMediaCount(4)
                         .setLimitSize(3 * 1024 * 1024)
                         .pick();

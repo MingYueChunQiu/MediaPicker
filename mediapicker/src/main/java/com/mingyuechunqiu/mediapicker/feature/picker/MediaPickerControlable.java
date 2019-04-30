@@ -32,6 +32,8 @@ public interface MediaPickerControlable {
 
     MediaPickerControlable setColumnCount(int columnCount);
 
+    MediaPickerControlable setStartThirdPreview(boolean startThirdPreview);
+
     MediaPickerControlable setImageEngine(ImageEngine engine);
 
     ImageEngine getImageEngine();
