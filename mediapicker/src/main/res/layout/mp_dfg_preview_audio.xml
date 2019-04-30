@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginLeft="@dimen/dp_10"
-        android:text="@string/formatted_zero_time"
+        android:text="@string/mp_formatted_zero_time"
         android:textSize="@dimen/font_12"
         app:layout_constraintBottom_toBottomOf="@id/iv_mp_preview_audio_control"
         app:layout_constraintHorizontal_chainStyle="spread_inside"

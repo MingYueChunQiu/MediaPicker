@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Spinner;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
@@ -75,6 +76,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
         Toolbar toolbar = view.findViewById(R.id.tb_mp_media_picker_bar);
         final AppCompatTextView tvConfirm = view.findViewById(R.id.tv_mp_media_picker_confirm);
         rvList = view.findViewById(R.id.rv_mp_media_picker_list);
+        Spinner spinner = view.findViewById(R.id.sp_mp_media_picker_buckets);
 
         mPresenter.initToolbar(getActivity(), toolbar);
         tvConfirm.setEnabled(false);
@@ -90,6 +92,38 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
             }
         });
         mPresenter.initMediaItemList(rvList, tvConfirm);
+        MediaPickerMainAdapter adapter = (MediaPickerMainAdapter) rvList.getAdapter();
+        if (adapter != null) {
+            List<BucketSpinnerAdapter.BucketAdapterItem> list = new ArrayList<>();
+            BucketSpinnerAdapter.BucketAdapterItem firstItem = new BucketSpinnerAdapter.BucketAdapterItem();
+            String bucketName = "";
+            switch (mConfig.getMediaPickerType()) {
+                case TYPE_IMAGE:
+                    bucketName = getString(R.string.mp_all_images);
+                    break;
+                case TYPE_AUDIO:
+                    bucketName = getString(R.string.mp_all_audios);
+                    break;
+                case TYPE_VIDEO:
+                    bucketName = getString(R.string.mp_all_videos);
+                    break;
+            }
+            firstItem.setBucketName(bucketName);
+            list.add(firstItem);
+            for (MediaAdapterItem item : adapter.getData()) {
+                if (item.getInfo() != null) {
+                    BucketSpinnerAdapter.BucketAdapterItem bucketAdapterItem = new BucketSpinnerAdapter.BucketAdapterItem();
+                    bucketAdapterItem.setBucketId(item.getInfo().getBucketId());
+                    bucketAdapterItem.setBucketName(item.getInfo().getBucketName());
+                    list.add(bucketAdapterItem);
+                }
+            }
+            if (getContext() != null) {
+                BucketSpinnerAdapter spinnerAdapter = new BucketSpinnerAdapter(getContext(), list);
+                spinner.setAdapter(spinnerAdapter);
+            }
+        }
+
         ViewModelProviders.of(this).get(MediaPickerMainViewModel.class)
                 .getSelectedCount().observe(this, new Observer<Integer>() {
             @Override

@@ -35,6 +35,7 @@
                     android:background="@color/gray_33000000">
 
                     <Spinner
+                        android:id="@+id/sp_mp_media_picker_buckets"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent" />
 
