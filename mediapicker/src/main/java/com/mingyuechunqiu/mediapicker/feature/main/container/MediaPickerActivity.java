@@ -36,7 +36,7 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.MP_HIDE_LO
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/23
  *     desc   : 多媒体选择界面
- *              继承自AppCompatActivity
+ *              继承自BaseMediaPickerActivity
  *     version: 1.0
  * </pre>
  */
@@ -55,7 +55,7 @@ public class MediaPickerActivity extends BaseMediaPickerActivity implements Easy
         setTransparentStatusAndControlNavigationLayout();
         setContentView(R.layout.mp_layout_frame);
         if (!EasyPermissions.hasPermissions(this, permissions)) {
-            EasyPermissions.requestPermissions(this, "请允许权限以便展示多媒体资源", 1, permissions);
+            EasyPermissions.requestPermissions(this, getString(R.string.mp_warn_get_permissions_rationale), 1, permissions);
             finishActivity();
             return;
         }

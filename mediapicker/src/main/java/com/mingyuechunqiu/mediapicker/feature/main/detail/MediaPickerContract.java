@@ -1,5 +1,6 @@
 package com.mingyuechunqiu.mediapicker.feature.main.detail;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.AppCompatTextView;
@@ -48,5 +49,21 @@ interface MediaPickerContract {
         abstract void initMediaItemList(RecyclerView recyclerView, AppCompatTextView textView);
 
         abstract void handelConfirmView(boolean canConfirm, int selectedCount, int maxSelectedCount, @NonNull WeakReference<AppCompatTextView> tvConfirm);
+
+        abstract String getBucketName(Context context);
+
+        abstract void setBucketViewDrawableBounds(AppCompatTextView tvName, int drawableResId);
+
+        /**
+         * 处理多媒体所属文件夹名称控件点击事件
+         *
+         * @param context     上下文
+         * @param v           被选中的View
+         * @param tvBucket    显示已选择的Bucket名称控件
+         * @param vBucket     底部Bucket依附View
+         * @param rvMediaList 多媒体列表
+         */
+        abstract void handleOnClickBucketName(Context context, android.view.View v, final AppCompatTextView tvBucket,
+                                              android.view.View vBucket, RecyclerView rvMediaList);
     }
 }

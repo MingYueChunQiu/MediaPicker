@@ -32,7 +32,7 @@ public interface MediaPickerControlable {
 
     MediaPickerControlable setColumnCount(int columnCount);
 
-    MediaPickerControlable setStartThirdPreview(boolean startThirdPreview);
+    MediaPickerControlable setStartPreviewByThird(boolean startPreviewByThird);
 
     MediaPickerControlable setImageEngine(ImageEngine engine);
 

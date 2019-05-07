@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.engine.GlideEngine;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
@@ -34,7 +35,9 @@ public class MediaPickerConfig implements Parcelable {
 
     private int columnCount;//一行列数
 
-    private boolean startThirdPreview;//打开第三方预览应用
+    private int loadAnimation;//Item加载动画
+
+    private boolean startPreviewByThird;//以第三方应用方式打开预览多媒体
 
     private ImageEngine engine;
 
@@ -44,7 +47,8 @@ public class MediaPickerConfig implements Parcelable {
         limitSize = SET_INVALID;
         limitDuration = SET_INVALID;
         columnCount = 4;
-        startThirdPreview = true;
+        loadAnimation = BaseQuickAdapter.SCALEIN;
+        startPreviewByThird = false;//默认以自定义方式预览多媒体
         engine = new GlideEngine();
     }
 
@@ -55,7 +59,8 @@ public class MediaPickerConfig implements Parcelable {
         limitDuration = in.readLong();
         filterLimitMedia = in.readByte() != 0;
         columnCount = in.readInt();
-        startThirdPreview = in.readByte() != 0;
+        loadAnimation = in.readInt();
+        startPreviewByThird = in.readByte() != 0;
     }
 
     public static final Creator<MediaPickerConfig> CREATOR = new Creator<MediaPickerConfig>() {
@@ -118,12 +123,20 @@ public class MediaPickerConfig implements Parcelable {
         this.columnCount = columnCount;
     }
 
-    public boolean isStartThirdPreview() {
-        return startThirdPreview;
+    public int getLoadAnimation() {
+        return loadAnimation;
     }
 
-    public void setStartThirdPreview(boolean startThirdPreview) {
-        this.startThirdPreview = startThirdPreview;
+    public void setLoadAnimation(int loadAnimation) {
+        this.loadAnimation = loadAnimation;
+    }
+
+    public boolean isStartPreviewByThird() {
+        return startPreviewByThird;
+    }
+
+    public void setStartPreviewByThird(boolean startPreviewByThird) {
+        this.startPreviewByThird = startPreviewByThird;
     }
 
     public ImageEngine getImageEngine() {
@@ -147,7 +160,8 @@ public class MediaPickerConfig implements Parcelable {
         dest.writeLong(limitDuration);
         dest.writeByte((byte) (filterLimitMedia ? 1 : 0));
         dest.writeInt(columnCount);
-        dest.writeByte((byte) (startThirdPreview ? 1 : 0));
+        dest.writeInt(loadAnimation);
+        dest.writeByte((byte) (startPreviewByThird ? 1 : 0));
     }
 
     /**
@@ -219,12 +233,21 @@ public class MediaPickerConfig implements Parcelable {
             return this;
         }
 
-        public boolean isStartThirdPreview() {
-            return mConfig.startThirdPreview;
+        public int getLoadAnimation() {
+            return mConfig.loadAnimation;
         }
 
-        public Builder setStartThirdPreview(boolean startThirdPreview) {
-            mConfig.startThirdPreview = startThirdPreview;
+        public Builder setLoadAnimation(int loadAnimation) {
+            mConfig.loadAnimation = loadAnimation;
+            return this;
+        }
+
+        public boolean isStartPreviewByThird() {
+            return mConfig.startPreviewByThird;
+        }
+
+        public Builder setStartPreviewByThird(boolean startPreviewByThird) {
+            mConfig.startPreviewByThird = startPreviewByThird;
             return this;
         }
 

@@ -1,6 +1,9 @@
 package com.mingyuechunqiu.mediapicker.feature.main.detail;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -8,9 +11,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.mingyuechunqiu.mediapicker.R;
@@ -34,7 +42,8 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.SET_INVALI
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/25
- *     desc   :
+ *     desc   : 多媒体选择模块MVP中P层
+ *              继承自MediaPickerContract.Presenter
  *     version: 1.0
  * </pre>
  */
@@ -42,6 +51,8 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
 
     private MediaPickerConfig mConfig;
     private Handler mHandler;
+    private List<MediaAdapterItem> mAllData;//所选类型所有文件夹中资源集合
+    private PopupWindow pwBuckets;
 
     MediaPickerPresenter(MediaPickerConfig config) {
         mConfig = config;
@@ -90,10 +101,18 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
 
     @Override
     public void release() {
+        if (pwBuckets != null) {
+            pwBuckets.dismiss();
+            pwBuckets = null;
+        }
         mConfig = null;
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
+        }
+        if (mAllData != null) {
+            mAllData.clear();
+            mAllData = null;
         }
     }
 
@@ -119,6 +138,183 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
             tvConfirm.get().setEnabled(false);
             tvConfirm.get().setText(R.string.mp_confirm);
         }
+    }
+
+    /**
+     * 获取多媒体所属文件夹名称
+     *
+     * @param context 上下文
+     * @return 返回名称字符串
+     */
+    @Override
+    String getBucketName(Context context) {
+        String bucketName = "";
+        if (context == null) {
+            return bucketName;
+        }
+        switch (mConfig.getMediaPickerType()) {
+            case TYPE_IMAGE:
+                bucketName = context.getString(R.string.mp_all_images);
+                break;
+            case TYPE_AUDIO:
+                bucketName = context.getString(R.string.mp_all_audios);
+                break;
+            case TYPE_VIDEO:
+                bucketName = context.getString(R.string.mp_all_videos);
+                break;
+        }
+        return bucketName;
+    }
+
+    @Override
+    void setBucketViewDrawableBounds(AppCompatTextView tvName, int drawableResId) {
+        if (tvName == null) {
+            return;
+        }
+        int size = (int) getPxFromDp(tvName.getResources(), 20);
+        Drawable drawable = tvName.getResources().getDrawable(drawableResId);
+        drawable.setBounds(0, 0, size, size);
+        tvName.setCompoundDrawables(null, null, drawable, null);
+    }
+
+    @Override
+    void handleOnClickBucketName(Context context, View v, final AppCompatTextView tvBucket,
+                                 View vBucket, final RecyclerView rvMediaList) {
+        if (context == null || context.getResources() == null ||
+                v == null || tvBucket == null || vBucket == null) {
+            return;
+        }
+        if (v.isSelected()) {
+            dismissBucketList(tvBucket);
+        } else {
+            if (pwBuckets == null) {
+                RecyclerView rvBucket = new RecyclerView(context);
+                rvBucket.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                rvBucket.setLayoutManager(new LinearLayoutManager(context));
+                initBucketList(context, rvBucket, (MediaPickerMainAdapter) rvMediaList.getAdapter(),
+                        new MediaPickerPresenter.OnSelectedBucketItemListener() {
+
+                            @Override
+                            public void onSelectedBucketItem(MediaBucketAdapter.BucketAdapterItem item) {
+                                handleOnSelectedBucketItem(item, rvMediaList, tvBucket);
+                            }
+                        });
+                int height = (int) (context.getResources().getDisplayMetrics().heightPixels * 2.2f / 10);
+                if (rvBucket.getAdapter() != null) {
+                    Paint paint = new Paint();
+                    paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+                            16, context.getResources().getDisplayMetrics()));
+                    height = (int) ((paint.getFontMetrics().bottom - paint.getFontMetrics().top +
+                            getPxFromDp(context.getResources(), 10) * 2) *
+                            rvBucket.getAdapter().getItemCount());
+                }
+                pwBuckets = new PopupWindow(rvBucket, ViewGroup.LayoutParams.WRAP_CONTENT, height, true);
+                pwBuckets.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        tvBucket.setSelected(false);
+                        setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
+                    }
+                });
+            }
+            if (pwBuckets != null) {
+                pwBuckets.showAsDropDown(vBucket, (int) getPxFromDp(context.getResources(), 10), 0);
+            }
+            setBucketViewDrawableBounds(tvBucket, R.drawable.mp_down_triangle);
+        }
+        v.setSelected(!v.isSelected());
+    }
+
+    private void initBucketList(Context context, RecyclerView rvList, MediaPickerMainAdapter adapter, final OnSelectedBucketItemListener listener) {
+        if (context == null || rvList == null || adapter == null || listener == null) {
+            return;
+        }
+        final List<MediaBucketAdapter.BucketAdapterItem> list = new ArrayList<>();
+        MediaBucketAdapter.BucketAdapterItem firstItem = new MediaBucketAdapter.BucketAdapterItem();
+        String bucketName = getBucketName(context);
+        firstItem.setBucketName(bucketName);
+        firstItem.setSelected(true);
+        list.add(firstItem);
+        for (MediaAdapterItem item : adapter.getData()) {
+            if (item.getInfo() != null) {
+                String itemBucketId = item.getInfo().getBucketId();
+                String itemBucketName = item.getInfo().getBucketName();
+                if (itemBucketId != null && itemBucketName != null &&
+                        !checkBucketInList(itemBucketId, list)) {
+                    MediaBucketAdapter.BucketAdapterItem bucketAdapterItem = new MediaBucketAdapter.BucketAdapterItem();
+                    bucketAdapterItem.setBucketId(itemBucketId);
+                    bucketAdapterItem.setBucketName(itemBucketName);
+                    list.add(bucketAdapterItem);
+                }
+            }
+        }
+        MediaBucketAdapter bucketAdapter = new MediaBucketAdapter(R.layout.mp_rv_bucket_item, list, listener);
+        bucketAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                MediaBucketAdapter mediaBucketAdapter = (MediaBucketAdapter) adapter;
+                if (mediaBucketAdapter == null || mediaBucketAdapter.getSelectedPosition() == position) {
+                    return;
+                }
+                MediaBucketAdapter.BucketAdapterItem selectedItem = mediaBucketAdapter.getItem(
+                        mediaBucketAdapter.getSelectedPosition());
+                if (selectedItem != null) {
+                    selectedItem.setSelected(false);
+                }
+                MediaBucketAdapter.BucketAdapterItem item = mediaBucketAdapter.getItem(position);
+                if (item != null) {
+                    item.setSelected(true);
+                }
+                mediaBucketAdapter.setSelectedPosition(position);
+                adapter.notifyDataSetChanged();
+                listener.onSelectedBucketItem(item);
+            }
+        });
+        rvList.setAdapter(bucketAdapter);
+    }
+
+    /**
+     * 处理多媒体所属文件夹被选择点击事件
+     *
+     * @param item        被选择的多媒体所属文件夹Item
+     * @param rvMediaList 多媒体列表
+     * @param tvBucket    显示已选择的Bucket名称控件
+     */
+    private void handleOnSelectedBucketItem(MediaBucketAdapter.BucketAdapterItem item, RecyclerView rvMediaList, AppCompatTextView tvBucket) {
+        if (item == null || rvMediaList == null || tvBucket == null) {
+            return;
+        }
+        String bucketId = item.getBucketId();
+        MediaPickerMainAdapter adapter = (MediaPickerMainAdapter) rvMediaList.getAdapter();
+        if (adapter == null) {
+            return;
+        }
+        if (mAllData == null) {
+            mAllData = adapter.getData();
+        }
+        List<MediaAdapterItem> showList = new ArrayList<>();
+        if (TextUtils.isEmpty(bucketId)) {
+            showList = mAllData;
+        } else {
+            for (MediaAdapterItem mediaAdapterItem : mAllData) {
+                if (mediaAdapterItem != null) {
+                    MediaInfo info = mediaAdapterItem.getInfo();
+                    if (info != null && info.getBucketId().equals(item.getBucketId())) {
+                        showList.add(mediaAdapterItem);
+                    }
+                }
+            }
+        }
+        adapter.setNewData(showList);
+        tvBucket.setSelected(false);
+        dismissBucketList(tvBucket);
+    }
+
+    private void dismissBucketList(AppCompatTextView tvBucket) {
+        if (pwBuckets != null) {
+            pwBuckets.dismiss();
+        }
+        setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
     }
 
     private void checkOrCreateMediaPickerConfig() {
@@ -167,6 +363,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                 mViewRef.get().showPreview(adapter.getData(), position, mConfig.getMediaPickerType());
             }
         });
+        adapter.openLoadAnimation(mConfig.getLoadAnimation());
         mHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -239,5 +436,48 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
         MediaAdapterItem item = new MediaAdapterItem();
         item.setInfo(info);
         list.add(item);
+    }
+
+    /**
+     * 检查Bucket是否在列表中
+     *
+     * @param bucketId 要检测的BucketID
+     * @param list     Bucket列表
+     * @return 如果在列表中返回true，否则返回false
+     */
+    private boolean checkBucketInList(String bucketId, List<MediaBucketAdapter.BucketAdapterItem> list) {
+        if (bucketId == null || list == null) {
+            return false;
+        }
+        for (MediaBucketAdapter.BucketAdapterItem item : list) {
+            if (bucketId.equals(item.getBucketId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 将dp转换为px
+     *
+     * @param resources 资源管理器
+     * @param dpVal     dp值
+     * @return 返回px值
+     */
+    private float getPxFromDp(@NonNull Resources resources, float dpVal) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpVal, resources.getDisplayMetrics());
+    }
+
+    /**
+     * 选择多媒体文件所属文件夹监听器
+     */
+    interface OnSelectedBucketItemListener {
+
+        /**
+         * 当选择多媒体文件所属文件夹时回调
+         *
+         * @param item 多媒体所属文件夹item
+         */
+        void onSelectedBucketItem(MediaBucketAdapter.BucketAdapterItem item);
     }
 }

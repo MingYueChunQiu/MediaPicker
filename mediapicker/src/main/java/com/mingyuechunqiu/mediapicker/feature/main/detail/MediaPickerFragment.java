@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Spinner;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
@@ -63,6 +63,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     private PreviewImageFragment mPreviewImageFg;
     private PreviewVideoFragment mPreviewVideoFg;
     private PlayVideoFragment mPlayVideoFg;
+    private List<MediaAdapterItem> mAllData;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -72,11 +73,21 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.mp_fragment_media_picker, container, false);
-        Toolbar toolbar = view.findViewById(R.id.tb_mp_media_picker_bar);
+        setLightStatusBar();
+        final View view = inflater.inflate(R.layout.mp_fragment_media_picker, container, false);
+        final Toolbar toolbar = view.findViewById(R.id.tb_mp_media_picker_bar);
         final AppCompatTextView tvConfirm = view.findViewById(R.id.tv_mp_media_picker_confirm);
         rvList = view.findViewById(R.id.rv_mp_media_picker_list);
-        Spinner spinner = view.findViewById(R.id.sp_mp_media_picker_buckets);
+        final AppCompatTextView tvBucket = view.findViewById(R.id.tv_mp_media_picker_bucket);
+        final View vBucket = view.findViewById(R.id.v_mp_media_picker_bucket_container);
+        mPresenter.setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
+        tvBucket.setText(mPresenter.getBucketName(getContext()));
+        tvBucket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.handleOnClickBucketName(getContext(), v, tvBucket, vBucket, rvList);
+            }
+        });
 
         mPresenter.initToolbar(getActivity(), toolbar);
         tvConfirm.setEnabled(false);
@@ -92,37 +103,6 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
             }
         });
         mPresenter.initMediaItemList(rvList, tvConfirm);
-        MediaPickerMainAdapter adapter = (MediaPickerMainAdapter) rvList.getAdapter();
-        if (adapter != null) {
-            List<BucketSpinnerAdapter.BucketAdapterItem> list = new ArrayList<>();
-            BucketSpinnerAdapter.BucketAdapterItem firstItem = new BucketSpinnerAdapter.BucketAdapterItem();
-            String bucketName = "";
-            switch (mConfig.getMediaPickerType()) {
-                case TYPE_IMAGE:
-                    bucketName = getString(R.string.mp_all_images);
-                    break;
-                case TYPE_AUDIO:
-                    bucketName = getString(R.string.mp_all_audios);
-                    break;
-                case TYPE_VIDEO:
-                    bucketName = getString(R.string.mp_all_videos);
-                    break;
-            }
-            firstItem.setBucketName(bucketName);
-            list.add(firstItem);
-            for (MediaAdapterItem item : adapter.getData()) {
-                if (item.getInfo() != null) {
-                    BucketSpinnerAdapter.BucketAdapterItem bucketAdapterItem = new BucketSpinnerAdapter.BucketAdapterItem();
-                    bucketAdapterItem.setBucketId(item.getInfo().getBucketId());
-                    bucketAdapterItem.setBucketName(item.getInfo().getBucketName());
-                    list.add(bucketAdapterItem);
-                }
-            }
-            if (getContext() != null) {
-                BucketSpinnerAdapter spinnerAdapter = new BucketSpinnerAdapter(getContext(), list);
-                spinner.setAdapter(spinnerAdapter);
-            }
-        }
 
         ViewModelProviders.of(this).get(MediaPickerMainViewModel.class)
                 .getSelectedCount().observe(this, new Observer<Integer>() {
@@ -160,6 +140,10 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
 
     @Override
     protected void releaseOnDestroyView() {
+        if (mAllData != null) {
+            mAllData.clear();
+            mAllData = null;
+        }
         mConfig = null;
         removeAllPreviewFragments();
         removePlayVideoFragment();
@@ -202,7 +186,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                 fragment = mPreviewImageFg = PreviewImageFragment.newInstance(list, index);
                 break;
             case TYPE_AUDIO:
-//                if (mConfig.isStartThirdPreview()) {
+//                if (mConfig.isStartPreviewByThird()) {
 //                    Intent intent = new Intent(Intent.ACTION_VIEW);
 //                    intent.setDataAndType(Uri.parse(list.get(index).getInfo().getFilePath()), "audio/*");
 //                    startActivity(intent);
@@ -211,7 +195,7 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                 showPreviewAudio(list, index);
                 break;
             case TYPE_VIDEO:
-                if (mConfig.isStartThirdPreview()) {
+                if (mConfig.isStartPreviewByThird()) {
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(Uri.parse(list.get(index).getInfo().getFilePath()), "video/*");
                     startActivity(intent);
@@ -321,6 +305,17 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
         //从播放视频界面回来时要移除全屏效果
         if (getActivity() != null) {
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
+    }
+
+    /**
+     * 设置状态栏为轻色调，避免白色字体被白色活动条遮挡
+     */
+    private void setLightStatusBar() {
+        if (getActivity() != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 }

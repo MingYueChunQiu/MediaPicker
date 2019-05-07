@@ -130,14 +130,14 @@ class MediaPickerControl implements MediaPickerControlable {
     }
 
     @Override
-    public MediaPickerControlable setStartThirdPreview(boolean startThirdPreview) {
+    public MediaPickerControlable setStartPreviewByThird(boolean startPreviewByThird) {
         checkOrCreateMediaPickerStore(mContext);
         if (mIntercept != null) {
-            mIntercept.beforeSetStartThirdPreview(startThirdPreview);
+            mIntercept.beforeSetStartPreviewByThird(startPreviewByThird);
         }
-        mStore.setStartThirdPreview(startThirdPreview);
+        mStore.setStartPreviewByThird(startPreviewByThird);
         if (mIntercept != null) {
-            mIntercept.afterSetStartThirdPreview(startThirdPreview);
+            mIntercept.afterSetStartPreviewByThird(startPreviewByThird);
         }
         return this;
     }

@@ -44,9 +44,9 @@ public interface MediaPickerInterceptable {
 
     void afterSetColumnCount(MediaPickerControlable control, int columnCount);
 
-    void beforeSetStartThirdPreview(boolean startThirdPreview);
+    void beforeSetStartPreviewByThird(boolean startPreviewByThird);
 
-    void afterSetStartThirdPreview(boolean startThirdPreview);
+    void afterSetStartPreviewByThird(boolean startPreviewByThird);
 
     void beforeSetImageEngine(MediaPickerControlable control, ImageEngine engine);
 

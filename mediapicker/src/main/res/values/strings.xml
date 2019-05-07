@@ -11,8 +11,9 @@
     <string name="mp_select_video">选择视频</string>
     <string name="mp_formatted_zero_time">00:00</string>
 
-    <string name="mp_all_images">所有视频</string>
+    <string name="mp_all_images">所有图片</string>
     <string name="mp_all_audios">所有音频</string>
     <string name="mp_all_videos">所有视频</string>
+    <string name="mp_warn_get_permissions_rationale">请允许权限以便展示多媒体资源</string>
 
 </resources>

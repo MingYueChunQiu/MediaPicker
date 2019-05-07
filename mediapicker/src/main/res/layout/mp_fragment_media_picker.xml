@@ -1,56 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <include
+        android:id="@+id/tb_mp_media_picker_bar"
+        layout="@layout/mp_layout_toolbar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_mp_media_picker_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/v_mp_media_picker_bucket_container"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_mp_media_picker_bar" />
+
+    <View
+        android:id="@+id/v_mp_media_picker_bucket_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/gray_33000000"
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <include
-            android:id="@+id/tb_mp_media_picker_bar"
-            layout="@layout/mp_layout_toolbar" />
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_mp_media_picker_bucket"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginLeft="@dimen/dp_20"
+        android:drawableEnd="@drawable/mp_up_triangle"
+        android:drawableRight="@drawable/mp_up_triangle"
+        android:drawablePadding="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/font_16"
+        app:layout_constraintBottom_toBottomOf="@id/v_mp_media_picker_bucket_container"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/v_mp_media_picker_bucket_container" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_4"
-                android:orientation="vertical">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_mp_media_picker_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:actionBarSize"
-                    android:background="@color/gray_33000000">
-
-                    <Spinner
-                        android:id="@+id/sp_mp_media_picker_buckets"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent" />
-
-                </android.support.v7.widget.LinearLayoutCompat>
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/fl_mp_media_picker_preview_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
-    </android.support.v7.widget.LinearLayoutCompat>
+    <FrameLayout
+        android:id="@+id/fl_mp_media_picker_preview_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_mp_media_picker_bar" />
 
     <FrameLayout
         android:id="@+id/fl_mp_media_picker_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

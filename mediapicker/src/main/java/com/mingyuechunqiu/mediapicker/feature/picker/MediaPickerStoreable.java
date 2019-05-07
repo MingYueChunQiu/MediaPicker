@@ -30,7 +30,7 @@ public interface MediaPickerStoreable {
 
     MediaPickerStoreable setColumnCount(int columnCount);
 
-    MediaPickerStoreable setStartThirdPreview(boolean startThirdPreview);
+    MediaPickerStoreable setStartPreviewByThird(boolean startPreviewByThird);
 
     MediaPickerStoreable setImageEngine(ImageEngine engine);
 

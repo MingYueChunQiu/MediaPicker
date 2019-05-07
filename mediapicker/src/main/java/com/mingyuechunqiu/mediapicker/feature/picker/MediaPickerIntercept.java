@@ -88,12 +88,12 @@ public class MediaPickerIntercept implements MediaPickerInterceptable {
     }
 
     @Override
-    public void beforeSetStartThirdPreview(boolean startThirdPreview) {
+    public void beforeSetStartPreviewByThird(boolean startPreviewByThird) {
 
     }
 
     @Override
-    public void afterSetStartThirdPreview(boolean startThirdPreview) {
+    public void afterSetStartPreviewByThird(boolean startPreviewByThird) {
 
     }
 
