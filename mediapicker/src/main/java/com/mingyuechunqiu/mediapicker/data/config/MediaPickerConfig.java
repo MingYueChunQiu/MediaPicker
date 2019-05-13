@@ -52,7 +52,7 @@ public class MediaPickerConfig implements Parcelable {
         columnCount = 4;
         loadAnimation = BaseQuickAdapter.SCALEIN;
         startPreviewByThird = false;//默认以自定义方式预览多媒体
-        themeConfig = new MediaPickerThemeConfig.Builder().buildLightTheme();//默认浅色主题
+        themeConfig = new MediaPickerThemeConfig.Builder().buildDarkTheme();//默认浅色主题
         engine = new GlideEngine();
     }
 
