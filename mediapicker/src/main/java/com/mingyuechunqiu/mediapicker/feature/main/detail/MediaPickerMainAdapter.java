@@ -32,6 +32,9 @@ class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, Ba
 
     @Override
     protected void convert(BaseViewHolder helper, final MediaAdapterItem item) {
+        if (helper == null || item == null) {
+            return;
+        }
         helper.setChecked(R.id.cb_mp_media_item_check, item.isChecked());
         helper.setOnCheckedChangeListener(R.id.cb_mp_media_item_check, new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -41,10 +44,10 @@ class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, Ba
         })
                 .addOnClickListener(R.id.iv_mp_media_item_show);
         AppCompatImageView ivShow = helper.getView(R.id.iv_mp_media_item_show);
-        if (ivShow != null) {
+        if (ivShow != null && item.getInfo() != null) {
             MediaPicker.getImageEngine().showImage(mContext,
                     new File(item.getInfo().getFilePath()),
-                    R.drawable.mp_back, R.drawable.mp_back, ivShow);
+                    R.drawable.mp_media_placeholder, R.drawable.mp_media_error, ivShow);
         }
     }
 }

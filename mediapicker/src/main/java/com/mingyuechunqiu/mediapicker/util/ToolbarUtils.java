@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 
 import com.mingyuechunqiu.mediapicker.R;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
 
 import java.lang.ref.WeakReference;
 
@@ -24,8 +24,8 @@ import java.lang.ref.WeakReference;
  */
 public class ToolbarUtils {
 
-    public static void initToolbar(FragmentActivity activity, Toolbar toolbar, MediaPickerType type) {
-        if (toolbar == null) {
+    public static void initToolbar(FragmentActivity activity, Toolbar toolbar, MediaPickerConfig config) {
+        if (activity == null || toolbar == null || config == null) {
             return;
         }
         final WeakReference<AppCompatActivity> activityWeakRef = new WeakReference<>((AppCompatActivity) activity);
@@ -37,8 +37,10 @@ public class ToolbarUtils {
         int statusBarHeight = getStatusBarHeight(activity);
         toolbar.getLayoutParams().height = toolbar.getLayoutParams().height + statusBarHeight;
         toolbar.setPadding(0, statusBarHeight, 0, 0);
+        toolbar.setBackgroundColor(config.getThemeConfig().getTopBackgroundColor());
+        toolbar.setNavigationIcon(config.getThemeConfig().getBackIconResId());
         String title = "";
-        switch (type) {
+        switch (config.getMediaPickerType()) {
             case TYPE_IMAGE:
                 title = activityWeakRef.get().getString(R.string.mp_select_image);
                 break;
@@ -53,6 +55,7 @@ public class ToolbarUtils {
         }
         if (!TextUtils.isEmpty(title)) {
             toolbar.setTitle(title);
+            toolbar.setTitleTextColor(config.getThemeConfig().getTopTextColor());
         }
     }
 

@@ -143,6 +143,7 @@ public class MediaUtils {
         if (context == null || callback == null) {
             return;
         }
+        callback.onPrepareBrowseMediaInfo();
         Uri imageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[]{
@@ -156,6 +157,8 @@ public class MediaUtils {
             return;
         }
         if (cursor.getCount() != 0) {
+            callback.onStartBrowseMediaInfo(cursor.getCount());
+            int index = 0;
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.TITLE));
                 String fileName =
@@ -166,9 +169,11 @@ public class MediaUtils {
                 String bucketId = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_ID));
                 String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
 
-                callback.onBrowseMediaInfo(newMediaInfo(title, fileName, MediaPickerType.TYPE_IMAGE,
+                callback.onBrowseMediaInfo(index, newMediaInfo(title, fileName, MediaPickerType.TYPE_IMAGE,
                         path, addDate, size, SET_INVALID, bucketId, bucketName));
+                index++;
             }
+            callback.onEndBrowseMediaInfo();
         }
         cursor.close();
     }
@@ -183,6 +188,7 @@ public class MediaUtils {
         if (context == null || callback == null) {
             return;
         }
+        callback.onPrepareBrowseMediaInfo();
         Uri audioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[]{
@@ -195,6 +201,8 @@ public class MediaUtils {
             return;
         }
         if (cursor.getCount() != 0) {
+            callback.onStartBrowseMediaInfo(cursor.getCount());
+            int index = 0;
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String fileName =
@@ -204,9 +212,11 @@ public class MediaUtils {
                 long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
                 long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
 
-                callback.onBrowseMediaInfo(newMediaInfo(title, fileName, MediaPickerType.TYPE_AUDIO,
+                callback.onBrowseMediaInfo(index, newMediaInfo(title, fileName, MediaPickerType.TYPE_AUDIO,
                         path, addDate, size, duration, null, null));
+                index++;
             }
+            callback.onEndBrowseMediaInfo();
         }
         cursor.close();
     }
@@ -221,6 +231,7 @@ public class MediaUtils {
         if (context == null || callback == null) {
             return;
         }
+        callback.onPrepareBrowseMediaInfo();
         Uri audioUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = context.getContentResolver();
         String[] projection = new String[]{
@@ -234,6 +245,8 @@ public class MediaUtils {
             return;
         }
         if (cursor.getCount() != 0) {
+            callback.onStartBrowseMediaInfo(cursor.getCount());
+            int index = 0;
             while (cursor.moveToNext()) {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
                 String fileName =
@@ -245,9 +258,11 @@ public class MediaUtils {
                 String buckedId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
                 String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
 
-                callback.onBrowseMediaInfo(newMediaInfo(title, fileName, MediaPickerType.TYPE_VIDEO,
+                callback.onBrowseMediaInfo(index, newMediaInfo(title, fileName, MediaPickerType.TYPE_VIDEO,
                         path, addDate, size, duration, buckedId, bucketName));
+                index++;
             }
+            callback.onEndBrowseMediaInfo();
         }
         cursor.close();
     }
@@ -306,10 +321,28 @@ public class MediaUtils {
     public interface BrowseMediaInfoCallback {
 
         /**
+         * 当准备浏览多媒体信息时调用
+         */
+        void onPrepareBrowseMediaInfo();
+
+        /**
+         * 当开始浏览多媒体信息时调用
+         *
+         * @param count 多媒体总数
+         */
+        void onStartBrowseMediaInfo(int count);
+
+        /**
          * 浏览多媒体资源信息时调用
          *
-         * @param info 多媒体信息数据
+         * @param index 浏览的索引位置
+         * @param info  多媒体信息数据
          */
-        void onBrowseMediaInfo(@NonNull MediaInfo info);
+        void onBrowseMediaInfo(int index, @NonNull MediaInfo info);
+
+        /**
+         * 当结束浏览多媒体信息时回调
+         */
+        void onEndBrowseMediaInfo();
     }
 }

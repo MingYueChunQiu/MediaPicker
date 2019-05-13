@@ -12,6 +12,14 @@ package com.mingyuechunqiu.mediapicker.data.constants;
  */
 public class Constants {
 
+    /**
+     * 主题类型常量类
+     */
+    public static class ThemeTypeConstants {
+        public static final int TYPE_LIGHT = 0;//浅色主题
+        public static final int TYPE_DARK = 1;//深色主题
+    }
+
     public static final int SET_INVALID = -1;//无效设置
 
     public static final String PREFIX_EXTRA = "EXTRA_";//Intent数据前缀

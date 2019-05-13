@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
@@ -87,6 +88,13 @@ class MediaPickerStore implements MediaPickerStoreable {
     public MediaPickerStoreable setStartPreviewByThird(boolean startPreviewByThird) {
         checkOrCreateMediaPickerConfig();
         mConfigBuilder.setStartPreviewByThird(startPreviewByThird);
+        return this;
+    }
+
+    @Override
+    public MediaPickerStoreable setThemeConfig(MediaPickerThemeConfig config) {
+        checkOrCreateMediaPickerConfig();
+        mConfigBuilder.setThemeConfig(config);
         return this;
     }
 

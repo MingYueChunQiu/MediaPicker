@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
@@ -138,6 +139,19 @@ class MediaPickerControl implements MediaPickerControlable {
         mStore.setStartPreviewByThird(startPreviewByThird);
         if (mIntercept != null) {
             mIntercept.afterSetStartPreviewByThird(startPreviewByThird);
+        }
+        return this;
+    }
+
+    @Override
+    public MediaPickerControlable setThemeConfig(MediaPickerThemeConfig config) {
+        checkOrCreateMediaPickerStore(mContext);
+        if (mIntercept != null) {
+            mIntercept.beforeSetThemeConfig(config);
+        }
+        mStore.setThemeConfig(config);
+        if (mIntercept != null) {
+            mIntercept.afterSetThemeConfig(config);
         }
         return this;
     }

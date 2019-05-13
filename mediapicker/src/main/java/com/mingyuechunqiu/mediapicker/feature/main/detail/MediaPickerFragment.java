@@ -23,6 +23,7 @@ import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.constants.Constants;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
 import com.mingyuechunqiu.mediapicker.feature.preview.audio.PreviewAudioDialogFragment;
@@ -73,14 +74,17 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setLightStatusBar();
+        setStatusBar();
         final View view = inflater.inflate(R.layout.mp_fragment_media_picker, container, false);
         final Toolbar toolbar = view.findViewById(R.id.tb_mp_media_picker_bar);
         final AppCompatTextView tvConfirm = view.findViewById(R.id.tv_mp_media_picker_confirm);
         rvList = view.findViewById(R.id.rv_mp_media_picker_list);
         final AppCompatTextView tvBucket = view.findViewById(R.id.tv_mp_media_picker_bucket);
         final View vBucket = view.findViewById(R.id.v_mp_media_picker_bucket_container);
-        mPresenter.setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
+
+        tvBucket.setTextColor(mConfig.getThemeConfig().getBottomTextColor());
+        vBucket.setBackgroundColor(mConfig.getThemeConfig().getBottomBackgroundColor());
+        mPresenter.setBucketViewDrawableBounds(tvBucket, mConfig.getThemeConfig().getUpTriangleIconResId());
         tvBucket.setText(mPresenter.getBucketName(getContext()));
         tvBucket.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,6 +313,17 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
     }
 
     /**
+     * 设置状态栏
+     */
+    private void setStatusBar() {
+        if (mConfig.getThemeConfig().getThemeType() == Constants.ThemeTypeConstants.TYPE_LIGHT) {
+            setDarkStatusBar();
+        } else {
+            setLightStatusBar();
+        }
+    }
+
+    /**
      * 设置状态栏为轻色调，避免白色字体被白色活动条遮挡
      */
     private void setLightStatusBar() {
@@ -317,5 +332,17 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+    }
+
+    /**
+     * 设置状态栏为深色调，避免黑色字体被白色活动条遮挡
+     */
+    protected void setDarkStatusBar() {
+        if (getActivity() == null) {
+            return;
+        }
+        getActivity().getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                        View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     }
 }

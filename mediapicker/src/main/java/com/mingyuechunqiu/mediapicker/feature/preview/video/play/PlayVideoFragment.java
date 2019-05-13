@@ -55,7 +55,7 @@ public class PlayVideoFragment extends BasePresenterFragment<PlayVideoContract.V
 
         if (!TextUtils.isEmpty(mVideoFilePath) && getContext() != null) {
             MediaPicker.getImageEngine().showImage(this, new File(mVideoFilePath),
-                    R.drawable.mp_back, R.drawable.mp_back, ivThumbnail);
+                    R.drawable.mp_media_placeholder, R.drawable.mp_media_error, ivThumbnail);
             vvVideo.setVideoPath(mVideoFilePath);
             vvVideo.setMediaController(new MediaController(getContext()));
             vvVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {

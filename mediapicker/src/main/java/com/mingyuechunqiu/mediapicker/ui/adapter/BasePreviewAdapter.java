@@ -34,8 +34,8 @@ public abstract class BasePreviewAdapter<T extends MediaAdapterItem, K extends B
         AppCompatImageView ivShow = helper.getView(R.id.iv_mp_preview_item_show);
         if (ivShow != null) {
             MediaPicker.getImageEngine().showImage(mContext,
-                    new File(item.getInfo().getFilePath()), R.drawable.mp_back,
-                    R.drawable.mp_back, ivShow);
+                    new File(item.getInfo().getFilePath()), R.drawable.mp_media_placeholder,
+                    R.drawable.mp_media_error, ivShow);
         }
         helper.setChecked(R.id.cb_mp_preview_item_checked, item.isChecked())
                 .setOnCheckedChangeListener(R.id.cb_mp_preview_item_checked, new CompoundButton.OnCheckedChangeListener() {

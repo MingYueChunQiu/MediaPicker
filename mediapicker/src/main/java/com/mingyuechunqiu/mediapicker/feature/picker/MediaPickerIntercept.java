@@ -1,6 +1,7 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
@@ -104,6 +105,16 @@ public class MediaPickerIntercept implements MediaPickerInterceptable {
 
     @Override
     public void afterSetImageEngine(MediaPickerControlable control, ImageEngine engine) {
+
+    }
+
+    @Override
+    public void beforeSetThemeConfig(MediaPickerThemeConfig config) {
+
+    }
+
+    @Override
+    public void afterSetThemeConfig(MediaPickerThemeConfig config) {
 
     }
 

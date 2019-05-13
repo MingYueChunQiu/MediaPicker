@@ -17,7 +17,8 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.SET_INVALI
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/23
- *     desc   : 多媒体选择器配置项
+ *     desc   : 多媒体选择器配置信息类
+ *              实现Parcelable
  *     version: 1.0
  * </pre>
  */
@@ -39,6 +40,8 @@ public class MediaPickerConfig implements Parcelable {
 
     private boolean startPreviewByThird;//以第三方应用方式打开预览多媒体
 
+    private MediaPickerThemeConfig themeConfig;//主题配置
+
     private ImageEngine engine;
 
     public MediaPickerConfig() {
@@ -49,6 +52,7 @@ public class MediaPickerConfig implements Parcelable {
         columnCount = 4;
         loadAnimation = BaseQuickAdapter.SCALEIN;
         startPreviewByThird = false;//默认以自定义方式预览多媒体
+        themeConfig = new MediaPickerThemeConfig.Builder().buildLightTheme();//默认浅色主题
         engine = new GlideEngine();
     }
 
@@ -61,6 +65,7 @@ public class MediaPickerConfig implements Parcelable {
         columnCount = in.readInt();
         loadAnimation = in.readInt();
         startPreviewByThird = in.readByte() != 0;
+        readThemeConfig(in);
     }
 
     public static final Creator<MediaPickerConfig> CREATOR = new Creator<MediaPickerConfig>() {
@@ -139,6 +144,14 @@ public class MediaPickerConfig implements Parcelable {
         this.startPreviewByThird = startPreviewByThird;
     }
 
+    public MediaPickerThemeConfig getThemeConfig() {
+        return themeConfig;
+    }
+
+    public void setThemeConfig(MediaPickerThemeConfig themeConfig) {
+        this.themeConfig = themeConfig;
+    }
+
     public ImageEngine getImageEngine() {
         return engine;
     }
@@ -162,6 +175,39 @@ public class MediaPickerConfig implements Parcelable {
         dest.writeInt(columnCount);
         dest.writeInt(loadAnimation);
         dest.writeByte((byte) (startPreviewByThird ? 1 : 0));
+        writeThemeConfig(dest);
+    }
+
+    /**
+     * 写入主题配置
+     *
+     * @param dest 输入储存对象
+     */
+    private void writeThemeConfig(@NonNull Parcel dest) {
+        dest.writeInt(themeConfig.getTopBackgroundColor());
+        dest.writeInt(themeConfig.getBottomBackgroundColor());
+        dest.writeInt(themeConfig.getTopTextColor());
+        dest.writeInt(themeConfig.getBottomTextColor());
+        dest.writeInt(themeConfig.getBackIconResId());
+        dest.writeInt(themeConfig.getUpTriangleIconResId());
+        dest.writeInt(themeConfig.getDownTriangleIconResId());
+    }
+
+    /**
+     * 读取主题配置
+     *
+     * @param in 输入信息
+     */
+    private void readThemeConfig(@NonNull Parcel in) {
+        themeConfig = new MediaPickerThemeConfig.Builder()
+                .setTopBackgroundColor(in.readInt())
+                .setBottomBackgroundColor(in.readInt())
+                .setTopTextColor(in.readInt())
+                .setBottomTextColor(in.readInt())
+                .setBackIconResId(in.readInt())
+                .setUpTriangleIconResId(in.readInt())
+                .setDownTriangleIconResId(in.readInt())
+                .build();
     }
 
     /**
@@ -248,6 +294,15 @@ public class MediaPickerConfig implements Parcelable {
 
         public Builder setStartPreviewByThird(boolean startPreviewByThird) {
             mConfig.startPreviewByThird = startPreviewByThird;
+            return this;
+        }
+
+        public MediaPickerThemeConfig getThemeConfig() {
+            return mConfig.themeConfig;
+        }
+
+        public Builder setThemeConfig(MediaPickerThemeConfig themeConfig) {
+            mConfig.themeConfig = themeConfig;
             return this;
         }
 

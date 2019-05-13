@@ -65,7 +65,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
         if (!(activity instanceof AppCompatActivity)) {
             return;
         }
-        ToolbarUtils.initToolbar(activity, toolbar, mConfig.getMediaPickerType());
+        ToolbarUtils.initToolbar(activity, toolbar, mConfig);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +85,6 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
         final WeakReference<RecyclerView> rvRef = new WeakReference<>(recyclerView);
         final WeakReference<AppCompatTextView> tvConfirm = new WeakReference<>(textView);
         rvRef.get().setLayoutManager(new GridLayoutManager(rvRef.get().getContext(), mConfig.getColumnCount()));
-        //延迟加载数据，避免页面卡顿
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -96,7 +95,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                     }
                 });
             }
-        }, 100);
+        }, 20);
     }
 
     @Override
@@ -213,14 +212,14 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                     @Override
                     public void onDismiss() {
                         tvBucket.setSelected(false);
-                        setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
+                        setBucketViewDrawableBounds(tvBucket, mConfig.getThemeConfig().getUpTriangleIconResId());
                     }
                 });
             }
             if (pwBuckets != null) {
                 pwBuckets.showAsDropDown(vBucket, (int) getPxFromDp(context.getResources(), 10), 0);
             }
-            setBucketViewDrawableBounds(tvBucket, R.drawable.mp_down_triangle);
+            setBucketViewDrawableBounds(tvBucket, mConfig.getThemeConfig().getDownTriangleIconResId());
         }
         v.setSelected(!v.isSelected());
     }
@@ -314,7 +313,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
         if (pwBuckets != null) {
             pwBuckets.dismiss();
         }
-        setBucketViewDrawableBounds(tvBucket, R.drawable.mp_up_triangle);
+        setBucketViewDrawableBounds(tvBucket, mConfig.getThemeConfig().getUpTriangleIconResId());
     }
 
     private void checkOrCreateMediaPickerConfig() {
@@ -330,112 +329,121 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
      * @param tvConfirm 确认选择控件
      */
     private void getMediaItemList(final WeakReference<RecyclerView> rvRef, final WeakReference<AppCompatTextView> tvConfirm) {
-        List<MediaAdapterItem> list = new ArrayList<>();
+        final List<MediaAdapterItem> list = new ArrayList<>();
+        final MediaPickerMainAdapter[] adapter = new MediaPickerMainAdapter[1];
+        MediaUtils.BrowseMediaInfoCallback callback = new MediaUtils.BrowseMediaInfoCallback() {
+            @Override
+            public void onPrepareBrowseMediaInfo() {
+            }
+
+            @Override
+            public void onStartBrowseMediaInfo(int count) {
+                for (int i = 0; i < count; i++) {
+                    list.add(new MediaAdapterItem());
+                }
+                adapter[0] = new MediaPickerMainAdapter(R.layout.mp_rv_media_item, list,
+                        mConfig.getMaxSelectMediaCount(), mConfig.getLimitSize(), mConfig.getLimitDuration(),
+                        new MediaPickerMainAdapter.OnItemSelectChangedListener() {
+                            @Override
+                            public void onItemSelectChanged(boolean canConfirm, int selectedCount, int maxSelectedCount,
+                                                            MediaAdapterItem item) {
+                                handelConfirmView(canConfirm, selectedCount, maxSelectedCount, tvConfirm);
+                            }
+                        });
+                adapter[0].setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                        if (checkViewRefIsNull()) {
+                            return;
+                        }
+                        //noinspection unchecked
+                        mViewRef.get().showPreview(adapter.getData(), position, mConfig.getMediaPickerType());
+                    }
+                });
+                adapter[0].openLoadAnimation(mConfig.getLoadAnimation());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        rvRef.get().setAdapter(adapter[0]);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onBrowseMediaInfo(int index, @NonNull MediaInfo info) {
+                boolean hide = false;
+                switch (mConfig.getMediaPickerType()) {
+                    case TYPE_IMAGE:
+                        hide = mConfig.isFilterLimitMedia() &&
+                                (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize());
+                        break;
+                    case TYPE_AUDIO:
+                        hide = mConfig.isFilterLimitMedia() &&
+                                ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
+                        break;
+                    case TYPE_VIDEO:
+                        hide = mConfig.isFilterLimitMedia() &&
+                                ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
+                        break;
+                    default:
+                        break;
+                }
+                if (!hide) {
+                    addMediaInfoItem(list, index, info);
+                }
+            }
+
+            @Override
+            public void onEndBrowseMediaInfo() {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter[0].notifyDataSetChanged();
+                        if (!checkViewRefIsNull()) {
+                            mViewRef.get().hideLoading();
+                        }
+                    }
+                });
+
+            }
+        };
         switch (mConfig.getMediaPickerType()) {
             case TYPE_IMAGE:
-                list = getImages(rvRef.get().getContext());
+                MediaUtils.getImages(rvRef.get().getContext(), callback);
                 break;
             case TYPE_AUDIO:
-                list = getAudios(rvRef.get().getContext());
+                MediaUtils.getAudios(rvRef.get().getContext(), callback);
                 break;
             case TYPE_VIDEO:
-                list = getVideos(rvRef.get().getContext());
+                MediaUtils.getVideos(rvRef.get().getContext(), callback);
                 break;
             default:
                 break;
         }
-        final MediaPickerMainAdapter adapter = new MediaPickerMainAdapter(R.layout.mp_rv_media_item, list,
-                mConfig.getMaxSelectMediaCount(), mConfig.getLimitSize(), mConfig.getLimitDuration(),
-                new MediaPickerMainAdapter.OnItemSelectChangedListener() {
-                    @Override
-                    public void onItemSelectChanged(boolean canConfirm, int selectedCount, int maxSelectedCount,
-                                                    MediaAdapterItem item) {
-                        handelConfirmView(canConfirm, selectedCount, maxSelectedCount, tvConfirm);
-                    }
-                });
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (checkViewRefIsNull()) {
-                    return;
-                }
-                //noinspection unchecked
-                mViewRef.get().showPreview(adapter.getData(), position, mConfig.getMediaPickerType());
-            }
-        });
-        adapter.openLoadAnimation(mConfig.getLoadAnimation());
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                rvRef.get().setAdapter(adapter);
-                if (!checkViewRefIsNull()) {
-                    mViewRef.get().hideLoading();
-                }
-            }
-        });
     }
 
-    private List<MediaAdapterItem> getImages(Context context) {
-        final List<MediaAdapterItem> list = new ArrayList<>();
-        if (context == null) {
-            return list;
+    /**
+     * 向集合中添加多媒体信息
+     *
+     * @param list  多媒体适配器集合
+     * @param index Item索引位置
+     * @param info  多媒体信息
+     */
+    private void addMediaInfoItem(@NonNull List<MediaAdapterItem> list, int index, MediaInfo info) {
+        if (index < 0 || index > list.size() - 1) {
+            return;
         }
-        MediaUtils.getImages(context, new MediaUtils.BrowseMediaInfoCallback() {
-            @Override
-            public void onBrowseMediaInfo(@NonNull MediaInfo info) {
-                boolean hide = mConfig.isFilterLimitMedia() &&
-                        (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize());
-                if (!hide) {
-                    addMediaInfoItem(list, info);
-                }
-            }
-        });
-        return list;
-    }
-
-    private List<MediaAdapterItem> getAudios(Context context) {
-        final List<MediaAdapterItem> list = new ArrayList<>();
-        if (context == null) {
-            return list;
+        MediaAdapterItem adapterItem = list.get(index);
+        if (adapterItem == null) {
+            return;
         }
-        MediaUtils.getAudios(context, new MediaUtils.BrowseMediaInfoCallback() {
-            @Override
-            public void onBrowseMediaInfo(@NonNull MediaInfo info) {
-
-                boolean hide = mConfig.isFilterLimitMedia() &&
-                        ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
-                if (!hide) {
-                    addMediaInfoItem(list, info);
-                }
-            }
-        });
-        return list;
-    }
-
-    private List<MediaAdapterItem> getVideos(Context context) {
-        final List<MediaAdapterItem> list = new ArrayList<>();
-        if (context == null) {
-            return list;
-        }
-        MediaUtils.getVideos(context, new MediaUtils.BrowseMediaInfoCallback() {
-            @Override
-            public void onBrowseMediaInfo(@NonNull MediaInfo info) {
-                boolean hide = mConfig.isFilterLimitMedia() &&
-                        ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
-                if (!hide) {
-                    addMediaInfoItem(list, info);
-                }
-            }
-        });
-        return list;
-    }
-
-    private void addMediaInfoItem(@NonNull List<MediaAdapterItem> list, MediaInfo info) {
-        MediaAdapterItem item = new MediaAdapterItem();
-        item.setInfo(info);
-        list.add(item);
+        list.get(index).setInfo(info);
+//        MediaAdapterItem item = new MediaAdapterItem();
+//        item.setInfo(info);
+//        list.add(item);
     }
 
     /**

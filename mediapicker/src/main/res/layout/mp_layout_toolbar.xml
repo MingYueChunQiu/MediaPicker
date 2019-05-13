@@ -6,7 +6,7 @@
     android:layout_height="?android:actionBarSize"
     android:background="@android:color/white"
     android:elevation="@dimen/dp_10"
-    app:navigationIcon="@drawable/mp_back">
+    app:navigationIcon="@drawable/mp_back_dark">
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_mp_media_picker_confirm"
