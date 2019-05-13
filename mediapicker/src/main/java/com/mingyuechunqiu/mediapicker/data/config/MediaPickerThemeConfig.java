@@ -19,7 +19,7 @@ import com.mingyuechunqiu.mediapicker.data.constants.Constants;
  */
 public class MediaPickerThemeConfig {
 
-    private int themeType;//主题类型（浅色或深色，请设置此类时一定要配置，默认为浅色）
+    private int themeType;//主题类型（浅色或深色，请设置此类时一定要配置涉及到状态栏配置，默认为深色）
 
     private @ColorInt
     int topBackgroundColor;//顶部背景颜色

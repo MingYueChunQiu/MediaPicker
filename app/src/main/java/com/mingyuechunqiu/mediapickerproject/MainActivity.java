@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.picker.MediaPicker;
 
 import java.util.ArrayList;
@@ -28,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
-                        .setMediaPickerType(MediaPickerType.TYPE_IMAGE)
-                        .setMaxSelectMediaCount(4)
+//                        .setMediaPickerType(MediaPickerType.TYPE_IMAGE)
+//                        .setMaxSelectMediaCount(4)
 //                        .setThemeConfig(new MediaPickerThemeConfig.Builder().buildDarkTheme())
-                        .setLimitSize(3 * 1024 * 1024)
+//                        .setLimitSize(3 * 1024 * 1024)
                         .pick();
             }
         });

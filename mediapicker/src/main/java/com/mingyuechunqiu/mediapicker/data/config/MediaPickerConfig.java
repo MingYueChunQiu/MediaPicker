@@ -42,7 +42,7 @@ public class MediaPickerConfig implements Parcelable {
 
     private MediaPickerThemeConfig themeConfig;//主题配置
 
-    private ImageEngine engine;
+    private ImageEngine engine;//图片加载引擎
 
     public MediaPickerConfig() {
         mediaPickerType = MediaPickerType.TYPE_IMAGE;
