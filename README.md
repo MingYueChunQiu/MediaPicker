@@ -36,6 +36,38 @@ dependencies {
 MediaPicker.init(MainActivity.this)
                         	.pick();
 ```
+获取到的结果在
+
+```
+@Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && requestCode == MP_REQUEST_START_MEDIA_PICKER && resultCode == RESULT_OK) {
+            ArrayList<MediaInfo> list = data.getParcelableArrayListExtra(EXTRA_PICKED_MEDIA_LIST);
+            for (MediaInfo info : list) {
+                Log.d("份", info.getTitle() + "   fds    " + info.getName() + " " + info.getFilePath() + " " +
+                        info.getSize() + " " + info.getDuration() + " " + info.getBucketId() + " "
+                        + info.getBucketName());
+            }
+        }
+    }
+```
+结果存储在MediaInfo中
+
+```
+public class MediaInfo：
+    private String title;//标题
+    private String name;//名称（带扩展名）
+    private MediaPickerType type;//多媒体类型
+    private String filePath;//视频路径
+    private String thumbnail;//缩略图
+    private long addDate;//添加到Media Provider的时间
+    private long duration;//时长
+    private long size;//大小
+    private String bucketId;//多媒体所属文件夹ID
+    private String bucketName;//多媒体所属文件夹名称
+```
+
 在MediaPicker主要是提供MediaPickerControlable接口实例，默认提供的是MediaPickerControl子类
 
 ```
@@ -233,6 +265,146 @@ MediaPickerThemeConfig默认提供了buildLightTheme和buildDarkTheme
             return mConfig;
         }
 ```
+库同时还提供了MediaUtils工具类，里面有许多工具方法
+
+```
+/**
+     * 启动选择本地图片界面
+     *
+     * @param activity    启动界面
+     * @param requestCode 启动请求码
+     */
+    public static void startPickImage(@NonNull Activity activity, int requestCode) {
+    }
+
+    /**
+     * 启动选择本地图片界面
+     *
+     * @param fragment    启动界面
+     * @param requestCode 启动请求码
+     */
+    public static void startPickImage(@NonNull Fragment fragment, int requestCode) {
+    }
+
+    /**
+     * 启动选择本地视频界面
+     *
+     * @param activity    启动界面
+     * @param requestCode 启动请求码
+     */
+    public static void startPickVideo(@NonNull Activity activity, int requestCode) {
+    }
+
+    /**
+     * 启动选择本地视频界面
+     *
+     * @param fragment    启动界面
+     * @param requestCode 启动请求码
+     */
+    public static void startPickVideo(@NonNull Fragment fragment, int requestCode) {
+    }
+
+/**
+     * 查询系统数据库地址中视频信息
+     *
+     * @param resolver Android组件
+     * @param uri      视频本地地址
+     * @return 如果成功获取数据，则返回MediaInfo，否则返回null
+     */
+    @Nullable
+    public static MediaInfo queryVideoInfo(@NonNull ContentResolver resolver, @NonNull Uri uri) {
+    }
+
+    /**
+     * 根据缩略图路径获取缩略图
+     *
+     * @param path 缩略图路径
+     * @return 返回生成的缩略图
+     */
+    public static Bitmap getThumbnail(String path) {
+    }
+
+    /**
+     * 设置视频播放声音
+     *
+     * @param volume 声音音量（0--1）
+     * @param o      播放的对象
+     */
+    public static void setVolume(float volume, Object o) {
+    }
+
+    /**
+     * 获取图片资源
+     *
+     * @param context  上下文
+     * @param callback 浏览资源回调
+     */
+    public static void getImages(final Context context, BrowseMediaInfoCallback callback) {
+    }
+
+/**
+     * 获取音频资源
+     *
+     * @param context  上下文
+     * @param callback 浏览资源回调
+     */
+    public static void getAudios(final Context context, BrowseMediaInfoCallback callback) {
+    }
+
+/**
+     * 获取视频资源
+     *
+     * @param context  上下文
+     * @param callback 浏览资源回调
+     */
+    public static void getVideos(final Context context, BrowseMediaInfoCallback callback) {
+    }
+
+@NonNull
+    private static Intent getPickImageIntent() {
+    }
+
+    /**
+     * 获取选择视频的启动意图
+     *
+     * @return 返回启动意图
+     */
+    @NonNull
+    private static Intent getPickVideoIntent() {
+    }
+
+ /**
+     * 浏览多媒体信息回调
+     */
+    public interface BrowseMediaInfoCallback {
+
+        /**
+         * 当准备浏览多媒体信息时调用
+         */
+        void onPrepareBrowseMediaInfo();
+
+        /**
+         * 当开始浏览多媒体信息时调用
+         *
+         * @param count 多媒体总数
+         */
+        void onStartBrowseMediaInfo(int count);
+
+        /**
+         * 浏览多媒体资源信息时调用
+         *
+         * @param index 浏览的索引位置
+         * @param info  多媒体信息数据
+         */
+        void onBrowseMediaInfo(int index, @NonNull MediaInfo info);
+
+        /**
+         * 当结束浏览多媒体信息时回调
+         */
+        void onEndBrowseMediaInfo();
+    }
+```
+
 ### 5.图片引擎
 用户可以设置ImageEngine
 
