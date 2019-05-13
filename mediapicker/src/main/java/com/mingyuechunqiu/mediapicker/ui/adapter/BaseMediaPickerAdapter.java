@@ -69,8 +69,7 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
         if (buttonView == null || item == null) {
             return;
         }
-        item.setChecked(!item.isChecked());
-        if (item.isChecked()) {
+        if (!item.isChecked()) {
             if (mSelectedList.size() >= mMaxSelectedCount) {
                 handleLimitItem(buttonView, "最多只能选择" + mMaxSelectedCount + "项");
                 return;
@@ -87,6 +86,7 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
         } else {
             mSelectedList.remove(item.getInfo());
         }
+        item.setChecked(!item.isChecked());
         if (mListener != null) {
             mListener.onItemSelectChanged(mSelectedList.size() != 0,
                     mSelectedList.size(), mMaxSelectedCount, item);
