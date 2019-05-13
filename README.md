@@ -265,7 +265,7 @@ MediaPickerThemeConfig默认提供了buildLightTheme和buildDarkTheme
             return mConfig;
         }
 ```
-库同时还提供了MediaUtils工具类，里面有许多工具方法
+库同时还提供了MediaUtils工具类，里面有许多工具方法，可以直接在任何地方直接调用
 
 ```
 /**
