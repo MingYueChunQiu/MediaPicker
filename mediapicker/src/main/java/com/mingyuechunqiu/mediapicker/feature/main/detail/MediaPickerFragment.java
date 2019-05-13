@@ -108,8 +108,9 @@ public class MediaPickerFragment extends BasePresenterFragment<MediaPickerContra
         });
         mPresenter.initMediaItemList(rvList, tvConfirm);
 
-        ViewModelProviders.of(this).get(MediaPickerMainViewModel.class)
-                .getSelectedCount().observe(this, new Observer<Integer>() {
+        MediaPickerMainViewModel viewModel = ViewModelProviders.of(this).get(MediaPickerMainViewModel.class);
+        viewModel.getSelectedCount().removeObservers(this);
+        viewModel.getSelectedCount().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(@Nullable Integer integer) {
                 updateItemSelectedStatus(integer, tvConfirm);

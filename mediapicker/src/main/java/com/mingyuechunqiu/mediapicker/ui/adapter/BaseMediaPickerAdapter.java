@@ -63,14 +63,14 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
      * 处理Item的选中情况
      *
      * @param buttonView 选择按钮控件
-     * @param isChecked  是否被选中
-     * @param item       对应Item
+     * @param item       选择的Item
      */
-    protected void handleItemChecked(CompoundButton buttonView, boolean isChecked, MediaAdapterItem item) {
+    protected void handleItemChecked(CompoundButton buttonView, MediaAdapterItem item) {
         if (buttonView == null || item == null) {
             return;
         }
-        if (isChecked) {
+        item.setChecked(!item.isChecked());
+        if (item.isChecked()) {
             if (mSelectedList.size() >= mMaxSelectedCount) {
                 handleLimitItem(buttonView, "最多只能选择" + mMaxSelectedCount + "项");
                 return;
@@ -87,7 +87,6 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
         } else {
             mSelectedList.remove(item.getInfo());
         }
-        item.setChecked(isChecked);
         if (mListener != null) {
             mListener.onItemSelectChanged(mSelectedList.size() != 0,
                     mSelectedList.size(), mMaxSelectedCount, item);

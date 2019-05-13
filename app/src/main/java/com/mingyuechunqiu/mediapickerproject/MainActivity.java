@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.picker.MediaPicker;
 
@@ -28,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
-                        .setMediaPickerType(MediaPickerType.TYPE_IMAGE)
+                        .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
                         .setMaxSelectMediaCount(4)
-//                        .setThemeConfig(new MediaPickerThemeConfig.Builder().buildDarkTheme())
+                        .setThemeConfig(new MediaPickerThemeConfig.Builder().buildDarkTheme())
                         .setLimitSize(3 * 1024 * 1024)
                         .pick();
             }

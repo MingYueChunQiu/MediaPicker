@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.ui.adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
+import android.view.View;
 import android.widget.CompoundButton;
 
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -30,18 +31,21 @@ public abstract class BasePreviewAdapter<T extends MediaAdapterItem, K extends B
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, final MediaAdapterItem item) {
+    protected void convert(final BaseViewHolder helper, final MediaAdapterItem item) {
         AppCompatImageView ivShow = helper.getView(R.id.iv_mp_preview_item_show);
         if (ivShow != null) {
             MediaPicker.getImageEngine().showImage(mContext,
                     new File(item.getInfo().getFilePath()), R.drawable.mp_media_placeholder,
                     R.drawable.mp_media_error, ivShow);
         }
+        //防止控件复用，导致setChecked触发上一个移除界面的控件的onCheckedChanged时间
+        //用setOnClickListener而不用setOnCheckedChangeListener
+        //noinspection deprecation
         helper.setChecked(R.id.cb_mp_preview_item_checked, item.isChecked())
-                .setOnCheckedChangeListener(R.id.cb_mp_preview_item_checked, new CompoundButton.OnCheckedChangeListener() {
+                .setOnClickListener(R.id.cb_mp_preview_item_checked, new View.OnClickListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        handleItemChecked(buttonView, isChecked, item);
+                    public void onClick(View v) {
+                        handleItemChecked((CompoundButton) v, item);
                     }
                 });
     }

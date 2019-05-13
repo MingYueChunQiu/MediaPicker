@@ -143,8 +143,8 @@ public class MediaPickerThemeConfig {
          * @return 返回深色主题配置信息对象
          */
         public MediaPickerThemeConfig buildDarkTheme() {
-            mConfig.topBackgroundColor = Color.parseColor("#CC000000");
-            mConfig.bottomBackgroundColor = Color.parseColor("#CC000000");
+            mConfig.topBackgroundColor = Color.parseColor("#2C2C34");
+            mConfig.bottomBackgroundColor = Color.parseColor("#2C2C34");
             mConfig.topTextColor = Color.WHITE;
             mConfig.bottomTextColor = Color.WHITE;
             mConfig.backIconResId = R.drawable.mp_back_light;

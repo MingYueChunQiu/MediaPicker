@@ -170,7 +170,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
         if (tvName == null) {
             return;
         }
-        int size = (int) getPxFromDp(tvName.getResources(), 20);
+        int size = (int) getPxFromDp(tvName.getResources(), 14);
         Drawable drawable = tvName.getResources().getDrawable(drawableResId);
         drawable.setBounds(0, 0, size, size);
         tvName.setCompoundDrawables(null, null, drawable, null);

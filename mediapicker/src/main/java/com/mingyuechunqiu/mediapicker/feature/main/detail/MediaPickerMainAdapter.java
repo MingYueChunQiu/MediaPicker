@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.feature.main.detail;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
+import android.view.View;
 import android.widget.CompoundButton;
 
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -35,13 +36,14 @@ class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, Ba
         if (helper == null || item == null) {
             return;
         }
-        helper.setChecked(R.id.cb_mp_media_item_check, item.isChecked());
-        helper.setOnCheckedChangeListener(R.id.cb_mp_media_item_check, new CompoundButton.OnCheckedChangeListener() {
+        //noinspection deprecation
+        helper.setOnClickListener(R.id.cb_mp_media_item_check, new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                handleItemChecked(buttonView, isChecked, item);
+            public void onClick(View v) {
+                handleItemChecked((CompoundButton) v, item);
             }
-        })
+        });
+        helper.setChecked(R.id.cb_mp_media_item_check, item.isChecked())
                 .addOnClickListener(R.id.iv_mp_media_item_show);
         AppCompatImageView ivShow = helper.getView(R.id.iv_mp_media_item_show);
         if (ivShow != null && item.getInfo() != null) {

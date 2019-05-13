@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
@@ -45,10 +44,6 @@ public class PlayVideoFragment extends BasePresenterFragment<PlayVideoContract.V
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getActivity() != null) {
-            getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
         View view = inflater.inflate(R.layout.mp_fragment_play_video, container, false);
         vvVideo = view.findViewById(R.id.vv_play_video);
         final AppCompatImageView ivThumbnail = view.findViewById(R.id.iv_play_video_thumbnail);
