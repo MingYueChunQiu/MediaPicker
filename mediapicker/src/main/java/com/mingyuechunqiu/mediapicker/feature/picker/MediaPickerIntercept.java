@@ -1,8 +1,6 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
-import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 /**
@@ -25,96 +23,6 @@ public class MediaPickerIntercept implements MediaPickerInterceptable {
 
     @Override
     public void afterSetMediaPickerConfig(MediaPickerControlable control, MediaPickerConfig config) {
-
-    }
-
-    @Override
-    public void beforeSetMediaPickerType(MediaPickerControlable control, MediaPickerType mediaPickerType) {
-
-    }
-
-    @Override
-    public void afterSetMediaPickerType(MediaPickerControlable control, MediaPickerType mediaPickerType) {
-
-    }
-
-    @Override
-    public void beforeSetMaxSelectMediaCount(MediaPickerControlable control, int maxSelectMediaCount) {
-
-    }
-
-    @Override
-    public void afterSetMaxSelectMediaCount(MediaPickerControlable control, int maxSelectMediaCount) {
-
-    }
-
-    @Override
-    public void beforeSetLimitSize(MediaPickerControlable control, long limitSize) {
-
-    }
-
-    @Override
-    public void afterSetLimitSize(MediaPickerControlable control, long limitSize) {
-
-    }
-
-    @Override
-    public void beforeSetLimitDuration(MediaPickerControlable control, long limitDuration) {
-
-    }
-
-    @Override
-    public void afterSetLimitDuration(MediaPickerControlable control, long limitDuration) {
-
-    }
-
-    @Override
-    public void beforeSetFilterLimitMedia(MediaPickerControlable control, boolean filterLimitMedia) {
-
-    }
-
-    @Override
-    public void afterSetFilterLimitMedia(MediaPickerControlable control, boolean filterLimitMedia) {
-
-    }
-
-    @Override
-    public void beforeSetColumnCount(MediaPickerControlable control, int columnCount) {
-
-    }
-
-    @Override
-    public void afterSetColumnCount(MediaPickerControlable control, int columnCount) {
-
-    }
-
-    @Override
-    public void beforeSetStartPreviewByThird(boolean startPreviewByThird) {
-
-    }
-
-    @Override
-    public void afterSetStartPreviewByThird(boolean startPreviewByThird) {
-
-    }
-
-    @Override
-    public void beforeSetImageEngine(MediaPickerControlable control, ImageEngine engine) {
-
-    }
-
-    @Override
-    public void afterSetImageEngine(MediaPickerControlable control, ImageEngine engine) {
-
-    }
-
-    @Override
-    public void beforeSetThemeConfig(MediaPickerThemeConfig config) {
-
-    }
-
-    @Override
-    public void afterSetThemeConfig(MediaPickerThemeConfig config) {
 
     }
 

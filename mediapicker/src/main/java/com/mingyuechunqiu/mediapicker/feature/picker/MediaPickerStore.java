@@ -7,10 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
-import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.main.container.MediaPickerActivity;
-import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 import static com.mingyuechunqiu.mediapicker.data.constants.Constants.EXTRA_MEDIA_PICKER_CONFIG;
 import static com.mingyuechunqiu.mediapicker.data.constants.Constants.MP_REQUEST_START_MEDIA_PICKER;
@@ -39,69 +36,6 @@ class MediaPickerStore implements MediaPickerStoreable {
     @Override
     public MediaPickerStoreable setMediaPickerConfig(MediaPickerConfig config) {
         mConfig = config;
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setMediaPickerType(MediaPickerType mediaPickerType) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setMediaPickerType(mediaPickerType);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setMaxSelectMediaCount(int maxSelectMediaCount) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setMaxSelectMediaCount(maxSelectMediaCount);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setLimitSize(long limitSize) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setLimitSize(limitSize);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setLimitDuration(long limitDuration) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setLimitDuration(limitDuration);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setFilterLimitMedia(boolean filterLimitMedia) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setFilterLimitMedia(filterLimitMedia);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setColumnCount(int columnCount) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setColumnCount(columnCount);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setStartPreviewByThird(boolean startPreviewByThird) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setStartPreviewByThird(startPreviewByThird);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setThemeConfig(MediaPickerThemeConfig config) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setThemeConfig(config);
-        return this;
-    }
-
-    @Override
-    public MediaPickerStoreable setImageEngine(ImageEngine engine) {
-        checkOrCreateMediaPickerConfig();
-        mConfigBuilder.setImageEngine(engine);
         return this;
     }
 

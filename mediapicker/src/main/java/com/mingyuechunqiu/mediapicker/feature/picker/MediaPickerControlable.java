@@ -1,8 +1,6 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
-import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 /**
@@ -20,24 +18,6 @@ public interface MediaPickerControlable {
     MediaPickerControlable setMediaPickerConfig(MediaPickerConfig config);
 
     MediaPickerControlable setMediaPickerIntercept(MediaPickerInterceptable intercept);
-
-    MediaPickerControlable setMediaPickerType(MediaPickerType mediaPickerType);
-
-    MediaPickerControlable setMaxSelectMediaCount(int maxSelectMediaCount);
-
-    MediaPickerControlable setLimitSize(long limitSize);
-
-    MediaPickerControlable setLimitDuration(long limitDuration);
-
-    MediaPickerControlable setFilterLimitMedia(boolean filterLimitMedia);
-
-    MediaPickerControlable setColumnCount(int columnCount);
-
-    MediaPickerControlable setStartPreviewByThird(boolean startPreviewByThird);
-
-    MediaPickerControlable setThemeConfig(MediaPickerThemeConfig config);
-
-    MediaPickerControlable setImageEngine(ImageEngine engine);
 
     ImageEngine getImageEngine();
 

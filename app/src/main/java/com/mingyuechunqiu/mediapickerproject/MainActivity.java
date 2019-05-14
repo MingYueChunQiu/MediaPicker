@@ -27,10 +27,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
-//                        .setMediaPickerType(MediaPickerType.TYPE_IMAGE)
-//                        .setMaxSelectMediaCount(4)
-//                        .setThemeConfig(new MediaPickerThemeConfig.Builder().buildDarkTheme())
-//                        .setLimitSize(3 * 1024 * 1024)
+//                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
+//                                .setThemeConfig(new MediaPickerThemeConfig.Builder()
+//                                        .buildDarkTheme())
+//                                .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
+//                                .setLimitDuration(10 * 1000)
+//                                .setLimitSize(10 * 1024 * 1024L)
+//                                .setMaxSelectMediaCount(3)
+//                                .setStartPreviewByThird(true)
+//                                .setColumnCount(3)
+//                                .setFilterLimitMedia(true)
+//                                .build())
                         .pick();
             }
         });
