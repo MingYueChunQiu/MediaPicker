@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                         .pick();
             }
         });
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_test, new MainFragment())
+                .commit();
     }
 
     @Override

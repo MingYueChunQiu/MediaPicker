@@ -1,10 +1,13 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
+
+import java.lang.ref.WeakReference;
 
 /**
  * <pre>
@@ -19,20 +22,28 @@ import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
  */
 class MediaPickerControl implements MediaPickerControlable {
 
-    private Context mContext;
+    private WeakReference<Activity> mActivityRef;
+    private WeakReference<Fragment> mFragmentRef;
     private MediaPickerStoreable mStore;
     private MediaPickerInterceptable mIntercept;
 
-    MediaPickerControl(@NonNull Context context, MediaPickerStoreable store,
+    MediaPickerControl(@NonNull Activity activity, MediaPickerStoreable store,
                        MediaPickerInterceptable intercept) {
-        mContext = context;
+        mActivityRef = new WeakReference<>(activity);
+        mStore = store;
+        mIntercept = intercept;
+    }
+
+    MediaPickerControl(@NonNull Fragment fragment, MediaPickerStoreable store,
+                       MediaPickerInterceptable intercept) {
+        mFragmentRef = new WeakReference<>(fragment);
         mStore = store;
         mIntercept = intercept;
     }
 
     @Override
     public MediaPickerControlable setMediaPickerConfig(MediaPickerConfig config) {
-        checkOrCreateMediaPickerStore(mContext);
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
         if (mIntercept != null) {
             mIntercept.beforeSetMediaPickerConfig(this, config);
         }
@@ -45,14 +56,14 @@ class MediaPickerControl implements MediaPickerControlable {
 
     @Override
     public MediaPickerControlable setMediaPickerIntercept(MediaPickerInterceptable intercept) {
-        checkOrCreateMediaPickerStore(mContext);
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
         mIntercept = intercept;
         return this;
     }
 
     @Override
     public ImageEngine getImageEngine() {
-        checkOrCreateMediaPickerStore(mContext);
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
         if (mIntercept != null) {
             mIntercept.beforeGetImageEngine(this);
         }
@@ -65,7 +76,7 @@ class MediaPickerControl implements MediaPickerControlable {
 
     @Override
     public MediaPickerStoreable getMediaPickerStore() {
-        checkOrCreateMediaPickerStore(mContext);
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
         if (mIntercept != null) {
             mIntercept.getMediaPickerStore(this, mStore);
         }
@@ -74,7 +85,7 @@ class MediaPickerControl implements MediaPickerControlable {
 
     @Override
     public void pick() {
-        checkOrCreateMediaPickerStore(mContext);
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
         if (mIntercept != null) {
             mIntercept.pick(this);
         }
@@ -90,12 +101,36 @@ class MediaPickerControl implements MediaPickerControlable {
         }
         mIntercept = null;
         mStore = null;
-        mContext = null;
+        mActivityRef = null;
+        mFragmentRef = null;
     }
 
-    private void checkOrCreateMediaPickerStore(@NonNull Context context) {
+    /**
+     * 检查或者创建多媒体选择器信息存储类
+     *
+     * @param activityRef Activity弱引用
+     * @param fragmentRef Fragment弱引用
+     */
+    private void checkOrCreateMediaPickerStore(WeakReference<Activity> activityRef,
+                                               WeakReference<Fragment> fragmentRef) {
+        if (activityRef != null && activityRef.get() != null) {
+            checkOrCreateMediaPickerStore(activityRef.get());
+        } else if (fragmentRef != null && fragmentRef.get() != null) {
+            checkOrCreateMediaPickerStore(fragmentRef.get());
+        } else {
+            throw new IllegalArgumentException("not set activity or fragment");
+        }
+    }
+
+    private void checkOrCreateMediaPickerStore(@NonNull Activity activity) {
         if (mStore == null) {
-            mStore = new MediaPickerStore(context);
+            mStore = new MediaPickerStore(activity);
+        }
+    }
+
+    private void checkOrCreateMediaPickerStore(@NonNull Fragment fragment) {
+        if (mStore == null) {
+            mStore = new MediaPickerStore(fragment);
         }
     }
 }

@@ -1,7 +1,8 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
@@ -27,12 +28,23 @@ public class MediaPicker {
         INSTANCE = new MediaPicker();
     }
 
-    public static MediaPickerControlable init(@NonNull Context context) {
-        return init(context, new MediaPickerStore(context), null);
+    public static MediaPickerControlable init(@NonNull Activity activity) {
+        return init(activity, new MediaPickerStore(activity), null);
     }
 
-    public static MediaPickerControlable init(@NonNull Context context, MediaPickerStoreable store, MediaPickerInterceptable intercept) {
-        INSTANCE.mControl = new MediaPickerControl(context, store, intercept);
+    public static MediaPickerControlable init(@NonNull Activity activity, MediaPickerStoreable store,
+                                              MediaPickerInterceptable intercept) {
+        INSTANCE.mControl = new MediaPickerControl(activity, store, intercept);
+        return INSTANCE.mControl;
+    }
+
+    public static MediaPickerControlable init(@NonNull Fragment fragment) {
+        return init(fragment, new MediaPickerStore(fragment), null);
+    }
+
+    public static MediaPickerControlable init(@NonNull Fragment fragment, MediaPickerStoreable store,
+                                              MediaPickerInterceptable intercept) {
+        INSTANCE.mControl = new MediaPickerControl(fragment, store, intercept);
         return INSTANCE.mControl;
     }
 
