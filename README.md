@@ -4,7 +4,8 @@ Android多媒体图片音频视频可限制大小时间自定义选择器库
 项目中许多时候需要选择图片、音视频，并有大小和时间限制，没有找到合适的库，所以自己提供一个满足需求的基础版本。
 一.可以选择图片、音频、视频
 二.可以限制选择数量、音视频大小、时长
-三.可以进行图片、音视频的预览播放
+三.可以进行图片、音视频的预览播放，指定每列显示item个数
+四.可以过滤只显示符合要求item
 
 ## 一.实现效果
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019051319181356.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NsMjAxOGdvZA==,size_16,color_FFFFFF,t_70)
@@ -26,15 +27,26 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.1'
 	}
 ```
 ## 三.使用
 ### 1.基础使用
 最简单的使用，全部为默认配置选择图片
 ```
-MediaPicker.init(MainActivity.this)
-                        	.pick();
+                MediaPicker.init(MainActivity.this)
+//                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
+//                                .setThemeConfig(new MediaPickerThemeConfig.Builder()
+//                                        .buildDarkTheme())
+//                                .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
+//                                .setLimitDuration(10 * 1000)
+//                                .setLimitSize(10 * 1024 * 1024L)
+//                                .setMaxSelectMediaCount(3)
+//                                .setStartPreviewByThird(true)
+//                                .setColumnCount(3)
+//                                .setFilterLimitMedia(true)
+//                                .build())
+                        .pick();
 ```
 获取到的结果在
 
@@ -111,27 +123,9 @@ MediaPickerControlable包裹MediaPickerStoreable，使用与实现中间层拦�
 ```
 public interface MediaPickerControlable {
 
-    MediaPickerControlable setMediaPickerConfig(MediaPickerConfig config);
+	MediaPickerControlable setMediaPickerConfig(MediaPickerConfig config);
 
     MediaPickerControlable setMediaPickerIntercept(MediaPickerInterceptable intercept);
-
-    MediaPickerControlable setMediaPickerType(MediaPickerType mediaPickerType);
-
-    MediaPickerControlable setMaxSelectMediaCount(int maxSelectMediaCount);
-
-    MediaPickerControlable setLimitSize(long limitSize);
-
-    MediaPickerControlable setLimitDuration(long limitDuration);
-
-    MediaPickerControlable setFilterLimitMedia(boolean filterLimitMedia);
-
-    MediaPickerControlable setColumnCount(int columnCount);
-
-    MediaPickerControlable setStartPreviewByThird(boolean startPreviewByThird);
-
-    MediaPickerControlable setThemeConfig(MediaPickerThemeConfig config);
-
-    MediaPickerControlable setImageEngine(ImageEngine engine);
 
     ImageEngine getImageEngine();
 
@@ -148,24 +142,6 @@ public interface MediaPickerControlable {
 public interface MediaPickerStoreable {
 
     MediaPickerStoreable setMediaPickerConfig(MediaPickerConfig config);
-
-    MediaPickerStoreable setMediaPickerType(MediaPickerType mediaPickerType);
-
-    MediaPickerStoreable setMaxSelectMediaCount(int maxSelectMediaCount);
-
-    MediaPickerStoreable setLimitSize(long limitSize);
-
-    MediaPickerStoreable setLimitDuration(long limitDuration);
-
-    MediaPickerStoreable setFilterLimitMedia(boolean filterLimitMedia);
-
-    MediaPickerStoreable setColumnCount(int columnCount);
-
-    MediaPickerStoreable setStartPreviewByThird(boolean startPreviewByThird);
-
-    MediaPickerStoreable setThemeConfig(MediaPickerThemeConfig config);
-
-    MediaPickerStoreable setImageEngine(ImageEngine engine);
 
     MediaPickerConfig getMediaPickerConfig();
 
