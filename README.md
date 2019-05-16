@@ -27,7 +27,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.2'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.3'
 	}
 ```
 ## 三.使用
