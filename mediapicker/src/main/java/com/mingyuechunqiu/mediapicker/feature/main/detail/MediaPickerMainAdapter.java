@@ -51,5 +51,10 @@ class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, Ba
                     new File(item.getInfo().getFilePath()),
                     R.drawable.mp_media_placeholder, R.drawable.mp_media_error, ivShow);
         }
+        if (item.isChecked()) {
+            mSelectedList.add(item.getInfo());
+        } else {
+            mSelectedList.remove(item.getInfo());
+        }
     }
 }

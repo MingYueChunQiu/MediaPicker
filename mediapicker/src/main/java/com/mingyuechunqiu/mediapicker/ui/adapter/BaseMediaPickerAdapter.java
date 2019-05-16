@@ -28,10 +28,10 @@ import static com.mingyuechunqiu.mediapicker.data.constants.Constants.SET_INVALI
  */
 public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K extends BaseViewHolder> extends BaseQuickAdapter<T, K> {
 
+    protected List<MediaInfo> mSelectedList;//已选择的Item集合
     private int mMaxSelectedCount;//最多可以选择的item数量
     private long mLimitSize;//限制大小
     private long mLimitDuration;//限制时长
-    private List<MediaInfo> mSelectedList;//已选择的Item集合
     private OnItemSelectChangedListener mListener;//Item选择监听器
 
     public BaseMediaPickerAdapter(int layoutResId, @Nullable List<T> data, int maxSelectCount,

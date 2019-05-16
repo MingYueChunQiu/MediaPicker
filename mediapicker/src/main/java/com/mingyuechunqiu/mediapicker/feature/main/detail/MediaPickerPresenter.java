@@ -441,9 +441,6 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
             return;
         }
         list.get(index).setInfo(info);
-//        MediaAdapterItem item = new MediaAdapterItem();
-//        item.setInfo(info);
-//        list.add(item);
     }
 
     /**
