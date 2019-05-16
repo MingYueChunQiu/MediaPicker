@@ -49,7 +49,7 @@ import static com.mingyuechunqiu.mediapicker.feature.preview.video.play.PlayVide
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/23
- *     desc   : 多媒体选择界面
+ *     desc   : 多媒体选择器界面
  *              继承自BasePresenterFragment
  *     version: 1.0
  * </pre>
