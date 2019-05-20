@@ -27,7 +27,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.2'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.3'
 	}
 ```
 ## 三.使用
@@ -85,7 +85,7 @@ public class MediaInfo：
 ```
 public class MediaPicker {
 
-    public static final MediaPicker INSTANCE;//单例
+   	public static final MediaPicker INSTANCE;//单例
     private MediaPickerControlable mControl;
 
     private MediaPicker() {
@@ -95,12 +95,23 @@ public class MediaPicker {
         INSTANCE = new MediaPicker();
     }
 
-    public static MediaPickerControlable init(@NonNull Context context) {
-        return init(context, new MediaPickerStore(context), null);
+    public static MediaPickerControlable init(@NonNull Activity activity) {
+        return init(activity, new MediaPickerStore(activity), null);
     }
 
-    public static MediaPickerControlable init(@NonNull Context context, MediaPickerStoreable store, MediaPickerInterceptable intercept) {
-        INSTANCE.mControl = new MediaPickerControl(context, store, intercept);
+    public static MediaPickerControlable init(@NonNull Activity activity, MediaPickerStoreable store,
+                                              MediaPickerInterceptable intercept) {
+        INSTANCE.mControl = new MediaPickerControl(activity, store, intercept);
+        return INSTANCE.mControl;
+    }
+
+    public static MediaPickerControlable init(@NonNull Fragment fragment) {
+        return init(fragment, new MediaPickerStore(fragment), null);
+    }
+
+    public static MediaPickerControlable init(@NonNull Fragment fragment, MediaPickerStoreable store,
+                                              MediaPickerInterceptable intercept) {
+        INSTANCE.mControl = new MediaPickerControl(fragment, store, intercept);
         return INSTANCE.mControl;
     }
 
@@ -113,9 +124,7 @@ public class MediaPicker {
     }
 }
 ```
-在拿到MediaPickerControlable后，设置相关配置，MediaPickerControlable里持有MediaPickerStoreable接口，默认提供的子类实现是MediaPickerStore。
-
-MediaPickerStore主要是用来持有MediaPickerConfig，进行配置设置，提供MediaPickerControlable和MediaPickerStoreable主要是既可以通过传入MediaPickerConfig配置，也可以直接调用MediaPickerControlable进行配置，最终都转换为MediaPickerConfig。
+在拿到MediaPickerControlable后，设置相关配置，MediaPickerControlable里持有MediaPickerStoreable接口，默认提供的子类实现是MediaPickerStore，MediaPickerStore主要是用来持有MediaPickerConfig，进行配置设置。
 
 MediaPickerControlable包裹MediaPickerStoreable，使用与实现中间层拦截器，方便实现中间额外操作，所以提供MediaPickerInterceptable接口，默认提供了MediaPickerIntercept空实现子类，可以对所有方法进行拦截监听
 ### 2.MediaPickerControlable
@@ -385,8 +394,10 @@ MediaPickerThemeConfig默认提供了buildLightTheme和buildDarkTheme
 用户可以设置ImageEngine
 
 ```
- MediaPicker.init(MainActivity.this)
-                        .setImageEngine()
+                MediaPicker.init(MainActivity.this)
+                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
+								.setImageEngine(new GlideEngine())
+                                .build())
                         .pick();
 ```
 ImageEngine 接口如下，默认提供了GlideEngine，如果和项目有冲突，可以用自己的图片引擎替换
