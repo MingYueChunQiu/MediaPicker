@@ -26,8 +26,8 @@ import java.util.List;
  */
 public abstract class BasePreviewAdapter<T extends MediaAdapterItem, K extends BaseViewHolder> extends BaseMediaPickerAdapter<T, K> {
 
-    public BasePreviewAdapter(int layoutResId, @Nullable List<T> data, int maxSelectCount, long limitSize, long limitDuration, OnItemSelectChangedListener listener) {
-        super(layoutResId, data, maxSelectCount, limitSize, limitDuration, listener);
+    public BasePreviewAdapter(int layoutResId, @Nullable List<T> data, OnItemSelectChangedListener listener) {
+        super(layoutResId, data, listener);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.mingyuechunqiu.mediapicker.feature.picker;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerFilter;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 /**
@@ -22,6 +23,10 @@ public interface MediaPickerInterceptable {
     void beforeGetImageEngine(MediaPickerControlable control);
 
     void afterGetImageEngine(MediaPickerControlable control, ImageEngine engine);
+
+    void beforeGetMediaPickerFilter(MediaPickerControlable control);
+
+    void afterGetMediaPickerFilter(MediaPickerControlable control, MediaPickerFilter filter);
 
     void getMediaPickerStore(MediaPickerControlable control, MediaPickerStoreable store);
 

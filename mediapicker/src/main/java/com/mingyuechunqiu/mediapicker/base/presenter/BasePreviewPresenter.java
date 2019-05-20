@@ -37,7 +37,7 @@ public abstract class BasePreviewPresenter<V extends IPreviewView> extends BaseA
             list = new ArrayList<>();
         }
         rvList.setAdapter(getPreviewAdapter(list,
-                MediaPicker.INSTANCE.getMediaPickerControl().getMediaPickerStore().getMediaPickerConfig()));
+                MediaPicker.getInstance().getMediaPickerControl().getMediaPickerStore().getMediaPickerConfig()));
         new PagerSnapHelper().attachToRecyclerView(rvList);
         if (index < 0 || index > list.size()) {
             index = 0;

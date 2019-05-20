@@ -20,6 +20,7 @@ public class MediaInfo implements Parcelable {
     private String title;//标题
     private String name;//名称（带扩展名）
     private MediaPickerType type;//多媒体类型
+    private String suffixType;//后缀名类型（例如：.mp4)
     private String filePath;//视频路径
     private String thumbnail;//缩略图
     private long addDate;//添加到Media Provider的时间
@@ -35,6 +36,7 @@ public class MediaInfo implements Parcelable {
         title = in.readString();
         name = in.readString();
         type = MediaPickerType.values()[in.readInt()];
+        suffixType = in.readString();
         filePath = in.readString();
         thumbnail = in.readString();
         addDate = in.readLong();
@@ -78,6 +80,14 @@ public class MediaInfo implements Parcelable {
 
     public void setType(MediaPickerType type) {
         this.type = type;
+    }
+
+    public String getSuffixType() {
+        return suffixType;
+    }
+
+    public void setSuffixType(String suffixType) {
+        this.suffixType = suffixType;
     }
 
     public String getFilePath() {
@@ -146,6 +156,7 @@ public class MediaInfo implements Parcelable {
         dest.writeString(title);
         dest.writeString(name);
         dest.writeInt(type.ordinal());
+        dest.writeString(suffixType);
         dest.writeString(filePath);
         dest.writeString(thumbnail);
         dest.writeLong(addDate);

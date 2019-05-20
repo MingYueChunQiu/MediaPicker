@@ -25,6 +25,7 @@ import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.feature.picker.MediaPicker;
 import com.mingyuechunqiu.mediapicker.util.MediaUtils;
 import com.mingyuechunqiu.mediapicker.util.ThreadPoolUtils;
 import com.mingyuechunqiu.mediapicker.util.ToolbarUtils;
@@ -338,11 +339,7 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
 
             @Override
             public void onStartBrowseMediaInfo(int count) {
-                for (int i = 0; i < count; i++) {
-                    list.add(new MediaAdapterItem());
-                }
                 adapter[0] = new MediaPickerMainAdapter(R.layout.mp_rv_media_item, list,
-                        mConfig.getMaxSelectMediaCount(), mConfig.getLimitSize(), mConfig.getLimitDuration(),
                         new MediaPickerMainAdapter.OnItemSelectChangedListener() {
                             @Override
                             public void onItemSelectChanged(boolean canConfirm, int selectedCount, int maxSelectedCount,
@@ -372,27 +369,49 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
 
             @Override
             public void onBrowseMediaInfo(int index, @NonNull MediaInfo info) {
-                boolean hide = false;
+                boolean hide = false;//是否隐藏该Item
+                boolean suffixMatched = true;//后缀名是否匹配
+                int spiltIndex = info.getFilePath().indexOf(".");
+                if (spiltIndex != -1) {
+                    String suffixName = info.getFilePath().substring(spiltIndex);
+                    info.setSuffixType(suffixName);
+                    if (mConfig.getLimitSuffixTypeList() != null && mConfig.getLimitSuffixTypeList().size() > 0) {
+                        boolean matched = false;
+                        for (String suffix : mConfig.getLimitSuffixTypeList()) {
+                            if (suffixName.equalsIgnoreCase(suffix)) {
+                                matched = true;
+                                break;
+                            }
+                        }
+                        suffixMatched = matched;
+                    }
+                }
                 switch (mConfig.getMediaPickerType()) {
                     case TYPE_IMAGE:
                         hide = mConfig.isFilterLimitMedia() &&
-                                (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize());
+                                (!suffixMatched ||
+                                        mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize() ||
+                                        MediaPicker.getMediaPickerFilter().filter(info));
                         break;
                     case TYPE_AUDIO:
                         hide = mConfig.isFilterLimitMedia() &&
-                                ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
+                                (!suffixMatched ||
+                                        (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
+                                        MediaPicker.getMediaPickerFilter().filter(info));
                         break;
                     case TYPE_VIDEO:
                         hide = mConfig.isFilterLimitMedia() &&
-                                ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
+                                (!suffixMatched ||
+                                        (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
+                                        MediaPicker.getMediaPickerFilter().filter(info));
                         break;
                     default:
                         break;
                 }
                 if (!hide) {
-                    addMediaInfoItem(list, index, info);
+                    addMediaInfoItem(list, info);
                 }
             }
 
@@ -428,19 +447,13 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
     /**
      * 向集合中添加多媒体信息
      *
-     * @param list  多媒体适配器集合
-     * @param index Item索引位置
-     * @param info  多媒体信息
+     * @param list 多媒体适配器集合
+     * @param info 多媒体信息
      */
-    private void addMediaInfoItem(@NonNull List<MediaAdapterItem> list, int index, MediaInfo info) {
-        if (index < 0 || index > list.size() - 1) {
-            return;
-        }
-        MediaAdapterItem adapterItem = list.get(index);
-        if (adapterItem == null) {
-            return;
-        }
-        list.get(index).setInfo(info);
+    private void addMediaInfoItem(@NonNull List<MediaAdapterItem> list, MediaInfo info) {
+        MediaAdapterItem adapterItem = new MediaAdapterItem();
+        adapterItem.setInfo(info);
+        list.add(adapterItem);
     }
 
     /**

@@ -9,6 +9,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerFilter;
+import com.mingyuechunqiu.mediapicker.feature.picker.MediaPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,16 +35,16 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
     private int mMaxSelectedCount;//最多可以选择的item数量
     private long mLimitSize;//限制大小
     private long mLimitDuration;//限制时长
+    private List<String> mLimitSuffixTypeList;//限制只能显示的多媒体后缀类型列表
+    private MediaPickerFilter mFilter;//多媒体过滤器
     private OnItemSelectChangedListener mListener;//Item选择监听器
 
-    public BaseMediaPickerAdapter(int layoutResId, @Nullable List<T> data, int maxSelectCount,
-                                  long limitSize, long limitDuration,
+    public BaseMediaPickerAdapter(int layoutResId, @Nullable List<T> data,
                                   OnItemSelectChangedListener listener) {
         super(layoutResId, data);
-        mMaxSelectedCount = maxSelectCount;
-        if (mMaxSelectedCount < 1) {
-            mMaxSelectedCount = 1;
-        }
+        MediaPickerConfig config = MediaPicker.getInstance().getMediaPickerControl().getMediaPickerStore()
+                .getMediaPickerConfig();
+        mMaxSelectedCount = config.getMaxSelectMediaCount();
         mSelectedList = new ArrayList<>(mMaxSelectedCount);
         if (data != null) {
             for (MediaAdapterItem item : data) {
@@ -50,8 +53,10 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
                 }
             }
         }
-        mLimitSize = limitSize;
-        mLimitDuration = limitDuration;
+        mLimitSize = config.getLimitSize();
+        mLimitDuration = config.getLimitDuration();
+        mLimitSuffixTypeList = config.getLimitSuffixTypeList();
+        mFilter = config.getMediaPickerFilter();
         mListener = listener;
     }
 
@@ -80,6 +85,24 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
             }
             if (mLimitDuration != SET_INVALID && item.getInfo().getDuration() > mLimitDuration) {
                 handleLimitItem(buttonView, "时长不能超过" + (mLimitDuration / 1000) + "秒");
+                return;
+            }
+            if (mLimitSuffixTypeList != null && mLimitSuffixTypeList.size() > 0) {
+                boolean matched = false;
+                for (String suffix : mLimitSuffixTypeList) {
+                    if (!TextUtils.isEmpty(item.getInfo().getSuffixType()) &&
+                            item.getInfo().getSuffixType().equalsIgnoreCase(suffix)) {
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    handleLimitItem(buttonView, "不能选择该格式类型文件");
+                    return;
+                }
+            }
+            if (mFilter != null && mFilter.filter(item.getInfo())) {
+                handleLimitItem(buttonView, "该项已被过滤，不能选择");
                 return;
             }
             mSelectedList.add(item.getInfo());

@@ -26,13 +26,13 @@ class PreviewVideoPresenter extends PreviewVideoContract.Presenter<PreviewVideoC
 
     @Override
     protected BasePreviewAdapter getPreviewAdapter(List<MediaAdapterItem> list, MediaPickerConfig config) {
-        PreviewVideoAdapter adapter = new PreviewVideoAdapter(R.layout.mp_rv_preview_item, list, config.getMaxSelectMediaCount(),
-                config.getLimitSize(), config.getLimitDuration(), new BaseMediaPickerAdapter.OnItemSelectChangedListener() {
-            @Override
-            public void onItemSelectChanged(boolean canConfirm, int selectedCount, int maxSelectedCount, MediaAdapterItem item) {
-                updateItemSelected(selectedCount);
-            }
-        });
+        PreviewVideoAdapter adapter = new PreviewVideoAdapter(R.layout.mp_rv_preview_item, list,
+                new BaseMediaPickerAdapter.OnItemSelectChangedListener() {
+                    @Override
+                    public void onItemSelectChanged(boolean canConfirm, int selectedCount, int maxSelectedCount, MediaAdapterItem item) {
+                        updateItemSelected(selectedCount);
+                    }
+                });
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {

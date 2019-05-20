@@ -22,8 +22,8 @@ import java.util.List;
  */
 class PreviewVideoAdapter extends BasePreviewAdapter<MediaAdapterItem, BaseViewHolder> {
 
-    PreviewVideoAdapter(int layoutResId, @Nullable List<MediaAdapterItem> data, int maxSelectCount, long limitSize, long limitDuration, OnItemSelectChangedListener listener) {
-        super(layoutResId, data, maxSelectCount, limitSize, limitDuration, listener);
+    PreviewVideoAdapter(int layoutResId, @Nullable List<MediaAdapterItem> data, OnItemSelectChangedListener listener) {
+        super(layoutResId, data, listener);
     }
 
     @Override

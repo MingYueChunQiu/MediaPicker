@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerFilter;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 import java.lang.ref.WeakReference;
@@ -72,6 +73,19 @@ class MediaPickerControl implements MediaPickerControlable {
             mIntercept.afterGetImageEngine(this, engine);
         }
         return engine;
+    }
+
+    @Override
+    public MediaPickerFilter getMediaPickerFilter() {
+        checkOrCreateMediaPickerStore(mActivityRef, mFragmentRef);
+        if (mIntercept != null) {
+            mIntercept.beforeGetMediaPickerFilter(this);
+        }
+        MediaPickerFilter filter = mStore.getMediaPickerConfig().getMediaPickerFilter();
+        if (mIntercept != null) {
+            mIntercept.afterGetMediaPickerFilter(this, filter);
+        }
+        return filter;
     }
 
     @Override

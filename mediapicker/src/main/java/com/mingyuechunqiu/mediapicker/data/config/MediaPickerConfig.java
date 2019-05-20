@@ -9,6 +9,8 @@ import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.engine.GlideEngine;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
+import java.util.List;
+
 import static com.mingyuechunqiu.mediapicker.data.constants.Constants.SET_INVALID;
 
 /**
@@ -31,6 +33,10 @@ public class MediaPickerConfig implements Parcelable {
     private long limitSize;//限制大小（单位B）
 
     private long limitDuration;//限制时长（毫秒）
+
+    private List<String> limitSuffixTypeList;//限制只能显示的多媒体后缀类型列表
+
+    private MediaPickerFilter mediaPickerFilter;//多媒体过滤器
 
     private boolean filterLimitMedia;//是否过滤超出限制的多媒体信息
 
@@ -61,6 +67,7 @@ public class MediaPickerConfig implements Parcelable {
         maxSelectMediaCount = in.readInt();
         limitSize = in.readLong();
         limitDuration = in.readLong();
+        limitSuffixTypeList = in.createStringArrayList();
         filterLimitMedia = in.readByte() != 0;
         columnCount = in.readInt();
         loadAnimation = in.readInt();
@@ -110,6 +117,22 @@ public class MediaPickerConfig implements Parcelable {
 
     public void setLimitDuration(long limitDuration) {
         this.limitDuration = limitDuration;
+    }
+
+    public List<String> getLimitSuffixTypeList() {
+        return limitSuffixTypeList;
+    }
+
+    public void setLimitSuffixTypeList(List<String> limitSuffixTypeList) {
+        this.limitSuffixTypeList = limitSuffixTypeList;
+    }
+
+    public MediaPickerFilter getMediaPickerFilter() {
+        return mediaPickerFilter;
+    }
+
+    public void setMediaPickerFilter(MediaPickerFilter mediaPickerFilter) {
+        this.mediaPickerFilter = mediaPickerFilter;
     }
 
     public boolean isFilterLimitMedia() {
@@ -171,6 +194,7 @@ public class MediaPickerConfig implements Parcelable {
         dest.writeInt(maxSelectMediaCount);
         dest.writeLong(limitSize);
         dest.writeLong(limitDuration);
+        dest.writeStringList(limitSuffixTypeList);
         dest.writeByte((byte) (filterLimitMedia ? 1 : 0));
         dest.writeInt(columnCount);
         dest.writeInt(loadAnimation);
@@ -258,6 +282,24 @@ public class MediaPickerConfig implements Parcelable {
 
         public Builder setLimitDuration(long limitDuration) {
             mConfig.limitDuration = limitDuration;
+            return this;
+        }
+
+        public List<String> getLimitSuffixTypeList() {
+            return mConfig.limitSuffixTypeList;
+        }
+
+        public Builder setLimitSuffixTypeList(List<String> limitSuffixTypeList) {
+            mConfig.limitSuffixTypeList = limitSuffixTypeList;
+            return this;
+        }
+
+        public MediaPickerFilter getMediaPickerFilter() {
+            return mConfig.mediaPickerFilter;
+        }
+
+        public Builder setMediaPickerFilter(MediaPickerFilter mediaPickerFilter) {
+            mConfig.mediaPickerFilter = mediaPickerFilter;
             return this;
         }
 

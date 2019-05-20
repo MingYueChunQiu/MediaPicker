@@ -27,8 +27,8 @@ import java.util.List;
  */
 class MediaPickerMainAdapter extends BaseMediaPickerAdapter<MediaAdapterItem, BaseViewHolder> {
 
-    MediaPickerMainAdapter(int layoutResId, @Nullable List<MediaAdapterItem> data, int maxSelectCount, long limitSize, long limitDuration, BaseMediaPickerAdapter.OnItemSelectChangedListener listener) {
-        super(layoutResId, data, maxSelectCount, limitSize, limitDuration, listener);
+    MediaPickerMainAdapter(int layoutResId, @Nullable List<MediaAdapterItem> data, BaseMediaPickerAdapter.OnItemSelectChangedListener listener) {
+        super(layoutResId, data, listener);
     }
 
     @Override

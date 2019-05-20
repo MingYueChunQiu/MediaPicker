@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerFilter;
 import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
 
 /**
@@ -18,7 +19,7 @@ import com.mingyuechunqiu.mediapicker.framework.ImageEngine;
  */
 public class MediaPicker {
 
-    public static final MediaPicker INSTANCE;//单例
+    private static final MediaPicker INSTANCE;//单例
     private MediaPickerControlable mControl;
 
     private MediaPicker() {
@@ -48,11 +49,19 @@ public class MediaPicker {
         return INSTANCE.mControl;
     }
 
+    public static MediaPicker getInstance() {
+        return INSTANCE;
+    }
+
     public MediaPickerControlable getMediaPickerControl() {
         return INSTANCE.mControl;
     }
 
     public static ImageEngine getImageEngine() {
         return INSTANCE.mControl.getImageEngine();
+    }
+
+    public static MediaPickerFilter getMediaPickerFilter() {
+        return INSTANCE.mControl.getMediaPickerStore().getMediaPickerConfig().getMediaPickerFilter();
     }
 }
