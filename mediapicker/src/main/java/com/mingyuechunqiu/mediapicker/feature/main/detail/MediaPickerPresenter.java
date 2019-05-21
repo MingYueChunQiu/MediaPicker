@@ -386,29 +386,30 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                         suffixMatched = matched;
                     }
                 }
-                switch (mConfig.getMediaPickerType()) {
-                    case TYPE_IMAGE:
-                        hide = mConfig.isFilterLimitMedia() &&
-                                (!suffixMatched ||
-                                        mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize() ||
-                                        MediaPicker.getMediaPickerFilter().filter(info));
-                        break;
-                    case TYPE_AUDIO:
-                        hide = mConfig.isFilterLimitMedia() &&
-                                (!suffixMatched ||
-                                        (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
-                                        MediaPicker.getMediaPickerFilter().filter(info));
-                        break;
-                    case TYPE_VIDEO:
-                        hide = mConfig.isFilterLimitMedia() &&
-                                (!suffixMatched ||
-                                        (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                        (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
-                                        MediaPicker.getMediaPickerFilter().filter(info));
-                        break;
-                    default:
-                        break;
+                if (mConfig.isFilterLimitSuffixType() && !suffixMatched) {
+                    hide = true;
+                } else {
+                    switch (mConfig.getMediaPickerType()) {
+                        case TYPE_IMAGE:
+                            hide = mConfig.isFilterLimitMedia() &&
+                                    (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize() ||
+                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                            break;
+                        case TYPE_AUDIO:
+                            hide = mConfig.isFilterLimitMedia() &&
+                                    ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
+                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                            break;
+                        case TYPE_VIDEO:
+                            hide = mConfig.isFilterLimitMedia() &&
+                                    ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
+                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
+                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 if (!hide) {
                     addMediaInfoItem(list, info);

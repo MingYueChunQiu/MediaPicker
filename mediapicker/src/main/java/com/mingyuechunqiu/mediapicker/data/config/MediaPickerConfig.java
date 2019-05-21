@@ -38,6 +38,8 @@ public class MediaPickerConfig implements Parcelable {
 
     private MediaPickerFilter mediaPickerFilter;//多媒体过滤器
 
+    private boolean filterLimitSuffixType;//是否过滤超出后缀名类型限制的多媒体
+
     private boolean filterLimitMedia;//是否过滤超出限制的多媒体信息
 
     private int columnCount;//一行列数
@@ -68,6 +70,7 @@ public class MediaPickerConfig implements Parcelable {
         limitSize = in.readLong();
         limitDuration = in.readLong();
         limitSuffixTypeList = in.createStringArrayList();
+        filterLimitSuffixType = in.readByte() != 0;
         filterLimitMedia = in.readByte() != 0;
         columnCount = in.readInt();
         loadAnimation = in.readInt();
@@ -135,6 +138,14 @@ public class MediaPickerConfig implements Parcelable {
         this.mediaPickerFilter = mediaPickerFilter;
     }
 
+    public boolean isFilterLimitSuffixType() {
+        return filterLimitSuffixType;
+    }
+
+    public void setFilterLimitSuffixType(boolean filterLimitSuffixType) {
+        this.filterLimitSuffixType = filterLimitSuffixType;
+    }
+
     public boolean isFilterLimitMedia() {
         return filterLimitMedia;
     }
@@ -195,6 +206,7 @@ public class MediaPickerConfig implements Parcelable {
         dest.writeLong(limitSize);
         dest.writeLong(limitDuration);
         dest.writeStringList(limitSuffixTypeList);
+        dest.writeByte((byte) (filterLimitSuffixType ? 1 : 0));
         dest.writeByte((byte) (filterLimitMedia ? 1 : 0));
         dest.writeInt(columnCount);
         dest.writeInt(loadAnimation);
@@ -300,6 +312,15 @@ public class MediaPickerConfig implements Parcelable {
 
         public Builder setMediaPickerFilter(MediaPickerFilter mediaPickerFilter) {
             mConfig.mediaPickerFilter = mediaPickerFilter;
+            return this;
+        }
+
+        public boolean isFilterLimitSuffixType() {
+            return mConfig.filterLimitSuffixType;
+        }
+
+        public Builder setFilterLimitSuffixType(boolean filterLimitSuffixType) {
+            mConfig.filterLimitSuffixType = filterLimitSuffixType;
             return this;
         }
 
