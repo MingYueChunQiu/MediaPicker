@@ -5,7 +5,12 @@ Android多媒体图片音频视频可限制大小时间自定义选择器库
 一.可以选择图片、音频、视频
 二.可以限制选择数量、音视频大小、时长
 三.可以进行图片、音视频的预览播放，指定每列显示item个数
-四.可以过滤只显示符合要求item
+四.可以自定义过滤条件，只显示符合要求item
+
+最新0.1.4版本：
+1.新增文件后缀名类型过滤
+2.新增自定义过滤器，可配合setFilterLimitMedia方法使用
+3.优化相关代码
 
 ## 一.实现效果
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019051319181356.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NsMjAxOGdvZA==,size_16,color_FFFFFF,t_70)
@@ -27,7 +32,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.3'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.4'
 	}
 ```
 ## 三.使用
@@ -44,6 +49,14 @@ dependencies {
 //                                .setMaxSelectMediaCount(3)
 //                                .setStartPreviewByThird(true)
 //                                .setColumnCount(3)
+//                                .setLimitSuffixTypeList(list)
+//                                .setMediaPickerFilter(new MediaPickerFilter() {
+//                                    @Override
+//                                    public boolean filter(MediaInfo info) {
+//
+//                                        return true;
+//                                    }
+//                                })
 //                                .setFilterLimitMedia(true)
 //                                .build())
                         .pick();
@@ -71,6 +84,7 @@ public class MediaInfo：
     private String title;//标题
     private String name;//名称（带扩展名）
     private MediaPickerType type;//多媒体类型
+    private String suffixType;//后缀名类型（例如：.mp4)
     private String filePath;//视频路径
     private String thumbnail;//缩略图
     private long addDate;//添加到Media Provider的时间
@@ -85,7 +99,7 @@ public class MediaInfo：
 ```
 public class MediaPicker {
 
-   	public static final MediaPicker INSTANCE;//单例
+ private static final MediaPicker INSTANCE;//单例
     private MediaPickerControlable mControl;
 
     private MediaPicker() {
@@ -115,12 +129,20 @@ public class MediaPicker {
         return INSTANCE.mControl;
     }
 
+    public static MediaPicker getInstance() {
+        return INSTANCE;
+    }
+
     public MediaPickerControlable getMediaPickerControl() {
         return INSTANCE.mControl;
     }
 
     public static ImageEngine getImageEngine() {
         return INSTANCE.mControl.getImageEngine();
+    }
+
+    public static MediaPickerFilter getMediaPickerFilter() {
+        return INSTANCE.mControl.getMediaPickerStore().getMediaPickerConfig().getMediaPickerFilter();
     }
 }
 ```
@@ -137,6 +159,8 @@ public interface MediaPickerControlable {
     MediaPickerControlable setMediaPickerIntercept(MediaPickerInterceptable intercept);
 
     ImageEngine getImageEngine();
+
+    MediaPickerFilter getMediaPickerFilter();
 
     MediaPickerStoreable getMediaPickerStore();
 
@@ -165,11 +189,17 @@ MediaPickerStore实现类里会持有MediaPickerConfig
 ```
 private MediaPickerType mediaPickerType;//多媒体选择类型
 
+    private MediaPickerType mediaPickerType;//多媒体选择类型
+
     private int maxSelectMediaCount;//最多可选择多媒体个数
 
     private long limitSize;//限制大小（单位B）
 
     private long limitDuration;//限制时长（毫秒）
+
+    private List<String> limitSuffixTypeList;//限制只能显示的多媒体后缀类型列表
+
+    private MediaPickerFilter mediaPickerFilter;//多媒体过滤器
 
     private boolean filterLimitMedia;//是否过滤超出限制的多媒体信息
 
