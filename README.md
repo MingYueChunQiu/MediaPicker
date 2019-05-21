@@ -7,10 +7,8 @@ Android多媒体图片音频视频可限制大小时间自定义选择器库
 三.可以进行图片、音视频的预览播放，指定每列显示item个数
 四.可以自定义过滤条件，只显示符合要求item
 
-最新0.1.4版本：
-1.新增文件后缀名类型过滤
-2.新增自定义过滤器，可配合setFilterLimitMedia方法使用
-3.优化相关代码
+最新0.1.5版本：
+1.优化完善过滤设置
 
 ## 一.实现效果
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019051319181356.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NsMjAxOGdvZA==,size_16,color_FFFFFF,t_70)
@@ -32,13 +30,18 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.4'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.5'
 	}
 ```
 ## 三.使用
 ### 1.基础使用
 最简单的使用，全部为默认配置选择图片
 ```
+        final ArrayList<String> list = new ArrayList<>();
+        list.add(MediaSuffixType.VideoSuffixType.TYPE_MP4);
+        tvTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
 //                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
 //                                .setThemeConfig(new MediaPickerThemeConfig.Builder()
@@ -53,10 +56,10 @@ dependencies {
 //                                .setMediaPickerFilter(new MediaPickerFilter() {
 //                                    @Override
 //                                    public boolean filter(MediaInfo info) {
-//
-//                                        return true;
+//                                        return false;
 //                                    }
 //                                })
+//                                .setFilterLimitSuffixType(true)
 //                                .setFilterLimitMedia(true)
 //                                .build())
                         .pick();
@@ -189,8 +192,6 @@ MediaPickerStore实现类里会持有MediaPickerConfig
 ```
 private MediaPickerType mediaPickerType;//多媒体选择类型
 
-    private MediaPickerType mediaPickerType;//多媒体选择类型
-
     private int maxSelectMediaCount;//最多可选择多媒体个数
 
     private long limitSize;//限制大小（单位B）
@@ -200,6 +201,8 @@ private MediaPickerType mediaPickerType;//多媒体选择类型
     private List<String> limitSuffixTypeList;//限制只能显示的多媒体后缀类型列表
 
     private MediaPickerFilter mediaPickerFilter;//多媒体过滤器
+
+    private boolean filterLimitSuffixType;//是否过滤超出后缀名类型限制的多媒体
 
     private boolean filterLimitMedia;//是否过滤超出限制的多媒体信息
 
@@ -216,6 +219,8 @@ private MediaPickerType mediaPickerType;//多媒体选择类型
 可以通过startPreviewByThird来设置是否通过调用第三方应用来预览，默认是库自带的预览效果，目前设置后只有视频可以打开调用其他第三方应用预览。
 
 在MediaPickerConfig里可以配置界面主题深色和浅色，默认为深色，同时也可以自定义设置
+
+filterLimitSuffixType是和limitSuffixTypeList配合使用，filterLimitMedia和时长、大小与自定义配合使用
 
 ```
 public class MediaPickerThemeConfig：
