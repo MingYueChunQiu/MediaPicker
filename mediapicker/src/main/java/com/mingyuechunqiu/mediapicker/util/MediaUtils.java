@@ -86,12 +86,13 @@ public class MediaUtils {
             return null;
         }
         if (cursor.moveToFirst()) {
-            MediaInfo info = new MediaInfo();
-            info.setName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE)));
-            info.setFilePath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)));
-            info.setThumbnail(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)));
-            info.setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)));
-            info.setSize(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)));
+            MediaInfo info = new MediaInfo.Builder()
+                    .setName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.TITLE)))
+                    .setFilePath(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)))
+                    .setThumbnail(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)))
+                    .setDuration(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)))
+                    .setSize(cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)))
+                    .build();
             cursor.close();
             return info;
         }
@@ -238,7 +239,7 @@ public class MediaUtils {
                 MediaStore.Video.VideoColumns.TITLE, MediaStore.Video.VideoColumns.DISPLAY_NAME,
                 MediaStore.Video.VideoColumns.DATA, MediaStore.Video.VideoColumns.DATE_ADDED,
                 MediaStore.Video.VideoColumns.SIZE, MediaStore.Video.VideoColumns.DURATION,
-                MediaStore.Video.VideoColumns.BUCKET_ID, MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME
+                MediaStore.Video.VideoColumns.BUCKET_ID, MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME,
         };
         Cursor cursor = contentResolver.query(audioUri, projection, null, null, null);
         if (cursor == null) {
@@ -257,6 +258,7 @@ public class MediaUtils {
                 long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
                 String buckedId = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID));
                 String bucketName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME));
+
 
                 callback.onBrowseMediaInfo(index, newMediaInfo(title, fileName, MediaPickerType.TYPE_VIDEO,
                         path, addDate, size, duration, buckedId, bucketName));
@@ -302,17 +304,17 @@ public class MediaUtils {
     @NonNull
     private static MediaInfo newMediaInfo(String title, String fileName, MediaPickerType type, String filePath,
                                           long addDate, long size, long duration, String buckedId, String bucketName) {
-        MediaInfo info = new MediaInfo();
-        info.setTitle(title);
-        info.setName(fileName);
-        info.setType(type);
-        info.setFilePath(filePath);
-        info.setAddDate(addDate);
-        info.setSize(size);
-        info.setDuration(duration);
-        info.setBucketId(buckedId);
-        info.setBucketName(bucketName);
-        return info;
+        return new MediaInfo.Builder()
+                .setTitle(title)
+                .setName(fileName)
+                .setType(type)
+                .setFilePath(filePath)
+                .setAddDate(addDate)
+                .setSize(size)
+                .setDuration(duration)
+                .setBucketId(buckedId)
+                .setBucketName(bucketName)
+                .build();
     }
 
     /**

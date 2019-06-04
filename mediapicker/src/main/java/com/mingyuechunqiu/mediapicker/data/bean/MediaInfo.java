@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.data.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 
@@ -32,7 +33,7 @@ public class MediaInfo implements Parcelable {
     public MediaInfo() {
     }
 
-    protected MediaInfo(Parcel in) {
+    protected MediaInfo(@NonNull Parcel in) {
         title = in.readString();
         name = in.readString();
         type = MediaPickerType.values()[in.readInt()];
@@ -164,5 +165,120 @@ public class MediaInfo implements Parcelable {
         dest.writeLong(size);
         dest.writeString(bucketId);
         dest.writeString(bucketName);
+    }
+
+    /**
+     * 链式调用
+     */
+    public static class Builder {
+
+        private MediaInfo mInfo;
+
+        public Builder() {
+            mInfo = new MediaInfo();
+        }
+
+        public MediaInfo build() {
+            return mInfo;
+        }
+
+        public String getTitle() {
+            return mInfo.title;
+        }
+
+        public Builder setTitle(String title) {
+            mInfo.title = title;
+            return this;
+        }
+
+        public String getName() {
+            return mInfo.name;
+        }
+
+        public Builder setName(String name) {
+            mInfo.name = name;
+            return this;
+        }
+
+        public MediaPickerType getType() {
+            return mInfo.type;
+        }
+
+        public Builder setType(MediaPickerType type) {
+            mInfo.type = type;
+            return this;
+        }
+
+        public String getSuffixType() {
+            return mInfo.suffixType;
+        }
+
+        public Builder setSuffixType(String suffixType) {
+            mInfo.suffixType = suffixType;
+            return this;
+        }
+
+        public String getFilePath() {
+            return mInfo.filePath;
+        }
+
+        public Builder setFilePath(String filePath) {
+            mInfo.filePath = filePath;
+            return this;
+        }
+
+        public String getThumbnail() {
+            return mInfo.thumbnail;
+        }
+
+        public Builder setThumbnail(String thumbnail) {
+            mInfo.thumbnail = thumbnail;
+            return this;
+        }
+
+        public long getAddDate() {
+            return mInfo.addDate;
+        }
+
+        public Builder setAddDate(long addDate) {
+            mInfo.addDate = addDate;
+            return this;
+        }
+
+        public long getDuration() {
+            return mInfo.duration;
+        }
+
+        public Builder setDuration(long duration) {
+            mInfo.duration = duration;
+            return this;
+        }
+
+        public long getSize() {
+            return mInfo.size;
+        }
+
+        public Builder setSize(long size) {
+            mInfo.size = size;
+            return this;
+        }
+
+        public String getBucketId() {
+            return mInfo.bucketId;
+        }
+
+        public Builder setBucketId(String bucketId) {
+            mInfo.bucketId = bucketId;
+            return this;
+        }
+
+        public String getBucketName() {
+            return mInfo.bucketName;
+        }
+
+        public Builder setBucketName(String bucketName) {
+            mInfo.bucketName = bucketName;
+            return this;
+        }
     }
 }
