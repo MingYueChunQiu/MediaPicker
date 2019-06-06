@@ -9,7 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mingyuechunqiu.mediapicker.data.bean.MediaInfo;
-import com.mingyuechunqiu.mediapicker.data.constants.MediaSuffixType;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerConfig;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerFilter;
+import com.mingyuechunqiu.mediapicker.data.config.MediaPickerThemeConfig;
+import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 import com.mingyuechunqiu.mediapicker.feature.picker.MediaPicker;
 
 import java.util.ArrayList;
@@ -25,30 +28,43 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView tvTest = findViewById(R.id.tv_test);
         final ArrayList<String> list = new ArrayList<>();
-        list.add(MediaSuffixType.ImageSuffixType.TYPE_PNG);
+//        list.add(MediaSuffixType.ImageSuffixType.TYPE_PNG);
         tvTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MediaPicker.init(MainActivity.this)
-//                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
-//                                .setThemeConfig(new MediaPickerThemeConfig.Builder()
-//                                        .buildDarkTheme())
-//                                .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
+                        .setMediaPickerConfig(new MediaPickerConfig.Builder()
+                                .setThemeConfig(new MediaPickerThemeConfig.Builder()
+                                        .buildDarkTheme())
+                                .setMediaPickerType(MediaPickerType.TYPE_VIDEO)
 //                                .setLimitDuration(10 * 1000)
 //                                .setLimitSize(10 * 1024 * 1024L)
-//                                .setMaxSelectMediaCount(3)
+                                .setMaxSelectMediaCount(3)
 //                                .setStartPreviewByThird(true)
-//                                .setColumnCount(3)
-//                                .setLimitSuffixTypeList(list)
-//                                .setMediaPickerFilter(new MediaPickerFilter() {
-//                                    @Override
-//                                    public boolean filter(MediaInfo info) {
-//                                        return false;
-//                                    }
-//                                })
-//                                .setFilterLimitSuffixType(true)
+                                .setColumnCount(3)
+                                .setLimitSuffixTypeList(list)
+                                .setMediaPickerFilter(new MediaPickerFilter() {
+                                    @Override
+                                    public boolean filter(MediaInfo info) {
+                                        if (info.getSize() > 10 * 1024 * 1024L) {
+                                            return true;
+                                        }
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public String getFilteredHint() {
+                                        return "测试";
+                                    }
+
+                                    @Override
+                                    public boolean hideFiltered() {
+                                        return false;
+                                    }
+                                })
+                                .setFilterLimitSuffixType(true)
 //                                .setFilterLimitMedia(true)
-//                                .build())
+                                .build())
                         .pick();
             }
         });

@@ -102,7 +102,8 @@ public abstract class BaseMediaPickerAdapter<T extends MediaAdapterItem, K exten
                 }
             }
             if (mFilter != null && mFilter.filter(item.getInfo())) {
-                handleLimitItem(buttonView, "该项已被过滤，不能选择");
+                handleLimitItem(buttonView, TextUtils.isEmpty(mFilter.getFilteredHint())
+                        ? "该项已被过滤，不能选择" : mFilter.getFilteredHint());
                 return;
             }
             mSelectedList.add(item.getInfo());

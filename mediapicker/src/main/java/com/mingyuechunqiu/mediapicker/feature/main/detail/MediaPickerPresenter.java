@@ -386,26 +386,25 @@ class MediaPickerPresenter extends MediaPickerContract.Presenter<MediaPickerCont
                         suffixMatched = matched;
                     }
                 }
-                if (mConfig.isFilterLimitSuffixType() && !suffixMatched) {
+                if ((mConfig.isFilterLimitSuffixType() && !suffixMatched) ||
+                        ((MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)) &&
+                                MediaPicker.getMediaPickerFilter().hideFiltered())) {
                     hide = true;
                 } else {
                     switch (mConfig.getMediaPickerType()) {
                         case TYPE_IMAGE:
                             hide = mConfig.isFilterLimitMedia() &&
-                                    (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize() ||
-                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                                    (mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize());
                             break;
                         case TYPE_AUDIO:
                             hide = mConfig.isFilterLimitMedia() &&
                                     ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
-                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
                             break;
                         case TYPE_VIDEO:
                             hide = mConfig.isFilterLimitMedia() &&
                                     ((mConfig.getLimitSize() != SET_INVALID && info.getSize() > mConfig.getLimitSize()) ||
-                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()) ||
-                                            (MediaPicker.getMediaPickerFilter() != null && MediaPicker.getMediaPickerFilter().filter(info)));
+                                            (mConfig.getLimitDuration() != SET_INVALID && info.getDuration() > mConfig.getLimitDuration()));
                             break;
                         default:
                             break;
