@@ -1,14 +1,12 @@
 # MediaPicker
-Android多媒体图片音频视频可限制大小时间自定义选择器库
-
 项目中许多时候需要选择图片、音视频，并有大小和时间限制，没有找到合适的库，所以自己提供一个满足需求的基础版本。
 一.可以选择图片、音频、视频
 二.可以限制选择数量、音视频大小、时长
 三.可以进行图片、音视频的预览播放，指定每列显示item个数
 四.可以自定义过滤条件，只显示符合要求item
 
-最新0.1.5版本：
-1.优化完善过滤设置
+最新0.1.6版本：
+1.优化完善自定义过滤器
 
 ## 一.实现效果
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019051319181356.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NsMjAxOGdvZA==,size_16,color_FFFFFF,t_70)
@@ -30,7 +28,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.5'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.6'
 	}
 ```
 ## 三.使用
@@ -56,6 +54,19 @@ dependencies {
 //                                .setMediaPickerFilter(new MediaPickerFilter() {
 //                                    @Override
 //                                    public boolean filter(MediaInfo info) {
+//                                        if (info.getSize() > 10 * 1024 * 1024L) {
+//                                            return true;
+//                                        }
+//                                        return false;
+//                                    }
+//
+//                                    @Override
+//                                    public String getFilteredHint() {
+//                                        return "测试";
+//                                    }
+//
+//                                    @Override
+//                                    public boolean hideFiltered() {
 //                                        return false;
 //                                    }
 //                                })
@@ -285,6 +296,58 @@ MediaPickerThemeConfig默认提供了buildLightTheme和buildDarkTheme
             return mConfig;
         }
 ```
+自定义过滤器MediaPickerFilter
+
+```
+public interface MediaPickerFilter {
+
+    /**
+     * 设置条件过滤多媒体Item
+     *
+     * @param info 多媒体信息对象
+     * @return 满足过滤条件的Item返回true，否则返回false
+     */
+    boolean filter(MediaInfo info);
+
+    /**
+     * 获取选择过滤Item时的提示文本（在hideFiltered为false时，使用才有效）
+     * 返回null或""无效，不设置时，默认显示"该项已被过滤，不能选择"
+     * 可以使用MediaPickerFilterAdapter，提供了默认实现，只重新自己需要的方法
+     *
+     * @return 返回提示字符串
+     */
+    String getFilteredHint();
+
+    /**
+     * 隐藏被过滤的Item
+     *
+     * @return 返回true表示隐藏，否则返回false
+     */
+    boolean hideFiltered();
+}
+```
+同时可以直接使用MediaPickerFilterAdapter，它实现了MediaPickerFilter，提供默认实现
+
+```
+public class MediaPickerFilterAdapter implements MediaPickerFilter {
+
+    @Override
+    public boolean filter(MediaInfo info) {
+        return false;
+    }
+
+    @Override
+    public String getFilteredHint() {
+        return null;
+    }
+
+    @Override
+    public boolean hideFiltered() {
+        return false;
+    }
+}
+```
+
 库同时还提供了MediaUtils工具类，里面有许多工具方法，可以直接在任何地方直接调用
 
 ```
