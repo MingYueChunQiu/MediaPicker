@@ -1,10 +1,10 @@
 package com.mingyuechunqiu.mediapicker.util;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 
 import com.mingyuechunqiu.mediapicker.R;

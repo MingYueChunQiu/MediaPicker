@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/dp_10">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_mp_preview_audio_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <android.support.v7.widget.AppCompatSeekBar
+    <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/sb_mp_preview_audio_progress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_mp_preview_audio_name" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_mp_preview_audio_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:layout_constraintRight_toLeftOf="@id/iv_mp_preview_audio_control"
         app:layout_constraintTop_toTopOf="@id/iv_mp_preview_audio_control" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_mp_preview_audio_control"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -55,7 +55,7 @@
         app:layout_constraintRight_toLeftOf="@id/tv_mp_preview_audio_duration"
         app:layout_constraintTop_toBottomOf="@id/sb_mp_preview_audio_progress" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_mp_preview_audio_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,4 +68,4 @@
         app:layout_constraintRight_toRightOf="@id/sb_mp_preview_audio_progress"
         app:layout_constraintTop_toTopOf="@id/iv_mp_preview_audio_control" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

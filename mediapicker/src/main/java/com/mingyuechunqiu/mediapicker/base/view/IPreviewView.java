@@ -1,7 +1,7 @@
 package com.mingyuechunqiu.mediapicker.base.view;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.mingyuechunqiu.mediapicker.base.presenter.BasePreviewPresenter;
 

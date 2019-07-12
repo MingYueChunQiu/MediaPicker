@@ -2,7 +2,7 @@ package com.mingyuechunqiu.mediapicker.data.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.data.constants.MediaPickerType;
 

@@ -1,6 +1,6 @@
 package com.mingyuechunqiu.mediapicker.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 
 import com.mingyuechunqiu.mediapicker.framework.KeyBackCallback;

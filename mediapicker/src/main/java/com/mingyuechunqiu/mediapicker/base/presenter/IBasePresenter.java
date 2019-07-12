@@ -1,6 +1,6 @@
 package com.mingyuechunqiu.mediapicker.base.presenter;
 
-import android.arch.lifecycle.LifecycleObserver;
+import androidx.lifecycle.LifecycleObserver;
 
 import com.mingyuechunqiu.mediapicker.base.view.IBaseView;
 

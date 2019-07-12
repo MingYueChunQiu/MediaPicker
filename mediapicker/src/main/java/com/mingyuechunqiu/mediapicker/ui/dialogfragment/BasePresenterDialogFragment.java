@@ -1,8 +1,8 @@
 package com.mingyuechunqiu.mediapicker.ui.dialogfragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.mingyuechunqiu.mediapicker.base.presenter.IBasePresenter;
 import com.mingyuechunqiu.mediapicker.base.view.IBaseView;

@@ -1,9 +1,9 @@
 package com.mingyuechunqiu.mediapicker.base.presenter;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mingyuechunqiu.mediapicker.base.view.IPreviewView;
 import com.mingyuechunqiu.mediapicker.data.bean.MediaAdapterItem;

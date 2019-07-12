@@ -1,6 +1,6 @@
 package com.mingyuechunqiu.mediapicker.ui.adapter;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.widget.CompoundButton;
 import android.widget.Toast;

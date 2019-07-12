@@ -1,8 +1,8 @@
 package com.mingyuechunqiu.mediapicker.data.config;
 
 import android.graphics.Color;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 
 import com.mingyuechunqiu.mediapicker.R;
 import com.mingyuechunqiu.mediapicker.data.constants.Constants;

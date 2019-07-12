@@ -1,6 +1,6 @@
 package com.mingyuechunqiu.mediapicker.base.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mingyuechunqiu.mediapicker.base.presenter.IBasePresenter;
 

@@ -1,9 +1,9 @@
 package com.mingyuechunqiu.mediapicker.feature.preview.audio;
 
 import android.media.MediaPlayer;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.AppCompatSeekBar;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.text.TextUtils;
 
 import com.mingyuechunqiu.mediapicker.R;

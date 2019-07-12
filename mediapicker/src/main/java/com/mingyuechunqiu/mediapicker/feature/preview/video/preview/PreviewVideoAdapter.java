@@ -1,6 +1,6 @@
 package com.mingyuechunqiu.mediapicker.feature.preview.video.preview;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.mingyuechunqiu.mediapicker.R;

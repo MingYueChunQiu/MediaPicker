@@ -1,11 +1,11 @@
 package com.mingyuechunqiu.mediapicker.feature.main.detail;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.mingyuechunqiu.mediapicker.base.presenter.BaseAbstractPresenter;
 import com.mingyuechunqiu.mediapicker.base.view.IBaseView;
