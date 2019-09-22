@@ -5,8 +5,8 @@
 三.可以进行图片、音视频的预览播放，指定每列显示item个数
 四.可以自定义过滤条件，只显示符合要求item
 
-最新0.1.6版本：
-1.优化完善自定义过滤器
+最新0.1.7版本：
+1.项目迁移至AndroidX，引入Kotlin
 
 ## 一.实现效果
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2019051319181356.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3NsMjAxOGdvZA==,size_16,color_FFFFFF,t_70)
@@ -28,7 +28,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.6'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.7'
 	}
 ```
 ## 三.使用
