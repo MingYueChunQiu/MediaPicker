@@ -5,7 +5,10 @@
 三.可以进行图片、音视频的预览播放，指定每列显示item个数
 四.可以自定义过滤条件，只显示符合要求item
 
-最新0.1.7版本：
+最新0.1.8版本：
+1.升级依赖版本，优化代码
+
+0.1.7版本：
 1.项目迁移至AndroidX，引入Kotlin
 
 ## 一.实现效果
@@ -28,7 +31,7 @@ allprojects {
 
 ```
 dependencies {
-	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.7'
+	        implementation 'com.github.MingYueChunQiu:MediaPicker:0.1.8'
 	}
 ```
 ## 三.使用
@@ -494,38 +497,4 @@ public class MediaPickerFilterAdapter implements MediaPickerFilter {
 ```
                 MediaPicker.init(MainActivity.this)
                         .setMediaPickerConfig(new MediaPickerConfig.Builder()
-								.setImageEngine(new GlideEngine())
-                                .build())
-                        .pick();
-```
-ImageEngine 接口如下，默认提供了GlideEngine，如果和项目有冲突，可以用自己的图片引擎替换
-```
-public interface ImageEngine {
-
-    /**
-     * 显示图片
-     *
-     * @param context       上下文
-     * @param file          显示图片
-     * @param placeholderId 占位图资源
-     * @param errorId       错误图资源
-     * @param imageView     显示控件
-     */
-    void showImage(Context context, File file,
-                   @DrawableRes int placeholderId, @DrawableRes int errorId, ImageView imageView);
-
-    /**
-     * 显示图片
-     *
-     * @param fragment      界面
-     * @param file          显示图片
-     * @param placeholderId 占位图资源
-     * @param errorId       错误图资源
-     * @param imageView     显示控件
-     */
-    void showImage(Fragment fragment, File file,
-                   @DrawableRes int placeholderId, @DrawableRes int errorId, ImageView imageView);
-}
-```
-## 四.总结
-目前用户所需要使用的源码都在上面，其他预览相关代码就暂不介绍，库刚出来，如果有什么疑问或建议欢迎提出，Github地址：https://github.com/MingYueChunQiu/MediaPicker.git ， 码云地址：https://gitee.com/MingYueChunQiu/MediaPicker.git ，感谢你的支持，如果不介意请Github点个star，谢谢。
+								
