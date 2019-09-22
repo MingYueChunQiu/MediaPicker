@@ -1,6 +1,7 @@
 package com.mingyuechunqiu.mediapicker.ui.dialogfragment;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
@@ -13,7 +14,8 @@ import com.mingyuechunqiu.mediapicker.base.view.IBaseView;
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/29
- *     desc   :
+ *     desc   : 所有MVP层DialogFragment的基类
+ *              继承自DialogFragment
  *     version: 1.0
  * </pre>
  */

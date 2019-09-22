@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.util;
 
 import androidx.annotation.AnimRes;
 import androidx.annotation.AnimatorRes;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -26,9 +27,9 @@ public class FragmentUtils {
      * @param exitResId       退出动画
      * @param fragments       要被移除的Fragment
      */
-    public static void removeFragments(FragmentManager fragmentManager, @AnimRes @AnimatorRes int enterResId,
+    public static void removeFragments(@Nullable FragmentManager fragmentManager, @AnimRes @AnimatorRes int enterResId,
                                        @AnimRes @AnimatorRes int exitResId,
-                                       Fragment... fragments) {
+                                       @Nullable Fragment... fragments) {
         if (fragmentManager == null || fragments == null) {
             return;
         }

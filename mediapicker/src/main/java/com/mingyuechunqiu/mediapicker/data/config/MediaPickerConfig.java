@@ -2,6 +2,7 @@ package com.mingyuechunqiu.mediapicker.data.config;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -179,6 +180,9 @@ public class MediaPickerConfig implements Parcelable {
     }
 
     public MediaPickerThemeConfig getThemeConfig() {
+        if (themeConfig == null) {
+            themeConfig = new MediaPickerThemeConfig.Builder().buildDarkTheme();//默认浅色主题
+        }
         return themeConfig;
     }
 

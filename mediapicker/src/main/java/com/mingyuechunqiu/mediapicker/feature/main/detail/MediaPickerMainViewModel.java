@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModel;
  *     Github : https://github.com/MingYueChunQiu
  *     e-mail : xiyujieit@163.com
  *     time   : 2019/4/26
- *     desc   :
+ *     desc   : 多媒体选择器视图业务模型类
+ *              继承自ViewModel
  *     version: 1.0
  * </pre>
  */
