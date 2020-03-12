@@ -29,6 +29,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation project(path: ':mediapicker')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.yalantis:ucrop:2.2.4-native'
 }
 repositories {
     mavenCentral()
